@@ -1,0 +1,51 @@
+.product-img {
+    height: 250px;
+    object-fit: cover;
+  }
+
+  .banner1{
+      background: #020024;
+background: linear-gradient(205deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);
+  }
+
+  .banner2 {
+background-image: url("IMG/m.png");
+background-size: contain;
+background-repeat: no-repeat;
+background-position: center;
+}
+
+
+.banner3 {
+background-image: url("IMG/h.png");
+background-size: contain;
+background-repeat: no-repeat;
+background-position: center;
+}
+
+  .card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    z-index: 2;
+  }
+
+  .card {
+    transition: all 0.3s ease;
+  }
+
+  .product-img {
+    height: 300px;
+    object-fit: cover;
+  }
+
+  @media screen and (max-width: 765px) {
+    .banner2, .banner3 {
+      display: none !important;
+    }
+  }
+  
+ .Perfil{
+    object-fit: cover;
+    margin-bottom: 10px;
+ }
