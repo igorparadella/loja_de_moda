@@ -40,6 +40,9 @@
     .card {
       height: 100%; /* Garante que todas as colunas fiquem do mesmo tamanho */
     }
+    .btn-sm {
+      width: 100%;
+    }
   </style>
   
 
@@ -149,6 +152,63 @@
       </div>
     </div>
   </div>
+
+  <!-- Avaliações e Comentários -->
+<div class="container my-5">
+  <h3 class="mb-4">Avaliações dos Clientes</h3>
+
+  <!-- Comentários existentes -->
+  <div class="mb-4">
+    <div class="border rounded p-3 mb-3">
+      <div class="d-flex justify-content-between">
+        <strong>Maria F.</strong>
+        <div class="text-warning">
+          ★★★★☆
+        </div>
+      </div>
+      <p class="mb-0">Adorei o tecido e a estampa, bem confortável!</p>
+    </div>
+
+    <div class="border rounded p-3 mb-3">
+      <div class="d-flex justify-content-between">
+        <strong>João S.</strong>
+        <div class="text-warning">
+          ★★★★★
+        </div>
+      </div>
+      <p class="mb-0">Produto chegou rápido e é exatamente como na foto.</p>
+    </div>
+  </div>
+
+  <!-- Formulário para nova avaliação -->
+  <h5>Deixe sua avaliação</h5>
+  <form>
+    <div class="mb-3">
+      <label for="nome" class="form-label">Seu nome</label>
+      <input type="text" class="form-control" id="nome" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="comentario" class="form-label">Comentário</label>
+      <textarea class="form-control" id="comentario" rows="3" required></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Nota</label>
+      <select class="form-select" required>
+        <option value="">Selecione...</option>
+        <option value="5">★★★★★ - Excelente</option>
+        <option value="4">★★★★☆ - Muito bom</option>
+        <option value="3">★★★☆☆ - Bom</option>
+        <option value="2">★★☆☆☆ - Regular</option>
+        <option value="1">★☆☆☆☆ - Ruim</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
+  </form>
+</div>
+
 
   <!-- Produtos relacionados -->
 <!-- Produtos relacionados -->

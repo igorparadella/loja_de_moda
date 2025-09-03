@@ -49,3 +49,8 @@ background-position: center;
     object-fit: cover;
     margin-bottom: 10px;
  }
+
+ s{
+  font-size: 12px;
+  color: rgb(50, 96, 184);
+ }
