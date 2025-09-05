@@ -536,7 +536,7 @@ body {
 }
 .card-input__input.-select {
   -webkit-appearance: none;
-  background-image: url("IMG/assets/images/dropdown.png");
+  background-image: url("../IMG/assets/images/dropdown.png");
   background-size: 12px;
   background-position: 90% center;
   background-repeat: no-repeat;
