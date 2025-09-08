@@ -117,3 +117,19 @@ background-position: center;
     #pagamento2{
       display: none;
     }
+
+@media (min-width: 1020px) and (max-width: 1500px) {
+  #asdf {
+    width: 65% !important;
+  }
+
+  #jlk {
+    width: 17% !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  #jlk {
+    display: none;
+  }
+}

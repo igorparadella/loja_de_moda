@@ -1,33 +1,28 @@
-body {
-    justify-content: center;
-    align-items: center;
-    background: #ffffff;
-  }
-
   .logo {
     display: flex;
     align-items: center;
-    background: #001f3f;
-    padding: 30px 60px;
+    padding: 5x 10px;
     border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(0, 31, 63, 0.7);
     cursor: default;
     user-select: none;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
+  .navbar {
+    background: #001f3f !important;
+  }
 
   .logo-icon {
-    width: 100px;
-    height: 100px;
+    width: 40px;
+    height: 40px;
     background: white;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-weight: 400;
-    font-size: 64px;
+    font-weight: 200;
+    font-size: 30px;
     color: #001f3f;
-    margin-right: 30px;
+    margin-right: 10px;
     box-shadow: 0 6px 20px rgba(0, 31, 63, 0.7);
     font-family: 'Arial Black', Gadget, sans-serif;
     user-select: none;
@@ -35,8 +30,8 @@ body {
 
   .logo-text {
     color: white;
-    font-size: 32px;
-    font-weight: 350;
+    font-size: 25px;
+    font-weight: 100;
     letter-spacing: 2px;
     user-select: none;
     text-shadow: 0 3px 8px rgba(0, 0, 0, 0.7);
@@ -45,6 +40,6 @@ body {
 
   .logo-text .highlight {
     color: #4da6ff;
-    font-weight: 350;
+    font-weight: 1;
 
   }

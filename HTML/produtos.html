@@ -18,7 +18,11 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-      <a class="navbar-brand" href="index.html">ModaTop</a>
+      <a class="navbar-brand" href="index.html">  <div class="logo">
+          <div class="logo-icon">M</div>
+          <div class="logo-text">Moda<span class="highlight">Top</span></div>
+        </div>
+      </a>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
@@ -60,7 +64,7 @@
   </nav>
 
   <!-- Filtro -->
-  <div class="position-fixed top-0 start-0 mt-5 ms-3 z-3"><br><br>
+  <div class="position-fixed top-0 start-0 mt-5 ms-1 z-3" id="jlk"><br><br>
     <div class="card shadow p-4" style="max-width: 300px;">
       <h5 class="card-title">Filtrar Produtos</h5>
       <form>
@@ -106,143 +110,135 @@
 
   <!-- Produtos -->
   <section class="py-5">
-    <div class="container"><br>
+    <div class="container"  id="asdf"><br>
       <h2 class="text-center mb-4">Destaques da Loja</h2>
-      <div class="row g-4">
+      <div class="row g-3">
 
-        <!-- Produto -->
-        <div class="col-md-4">
-          <div class="card h-100">
-      <div class="favorite-checkbox">
-        <input type="checkbox" id="fav1">
-        <label for="fav1"><i class="fas fa-heart"></i></label>
-      </div>
-            <img src="../IMG/roupas/r1.webp" class="card-img-top product-img" alt="Blusa Básica">
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">Blusa Básica Feminina</h5>
-              <p class="card-text">Leve e confortável, ideal para o dia a dia.</p>
-              <p class="text-primary fw-bold">R$ 79,90 (20% OFF)</p>
-              <a href="r1.html" class="btn btn-outline-primary mt-auto">Comprar</a>
+          <!-- Produto -->
+          <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100">
+        <div class="favorite-checkbox">
+          <input type="checkbox" id="fav1">
+          <label for="fav1"><i class="fas fa-heart"></i></label>
+        </div>
+              <img src="../IMG/roupas/r1.webp" class="card-img-top product-img" alt="Blusa Básica">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Blusa Básica Feminina</h5>
+                <p class="card-text">Leve e confortável, ideal para o dia a dia.</p>
+                <p class="text-primary fw-bold">R$ 79,90 (20% OFF)</p>
+                <a href="r1.html" class="btn btn-outline-primary mt-auto">Comprar</a>
+              </div>
             </div>
           </div>
-        </div>
 
         <!-- Produto -->
-        <div class="col-md-4">
-          <div class="card h-100">
-      <div class="favorite-checkbox">
-        <input type="checkbox" id="fav2">
-        <label for="fav2"><i class="fas fa-heart"></i></label>
-      </div>
-            <img src="../IMG/roupas/r2.webp" class="card-img-top product-img" alt="Tênis Branco">
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">Tênis Branco Casual</h5>
-              <p class="card-text">Combina com tudo! Confortável e moderno.</p>
-              <p class="text-primary fw-bold">R$ 219,90</p>
-              <a href="#" class="btn btn-outline-primary mt-auto">Comprar</a>
+                  <div class="col-12 col-sm-6 col-md-4">
+                    <div class="card h-100">
+                <div class="favorite-checkbox">
+                  <input type="checkbox" id="fav2">
+                  <label for="fav2"><i class="fas fa-heart"></i></label>
+                </div>
+                  <img src="../IMG/roupas/r2.webp" class="card-img-top product-img" alt="Tênis Branco">
+                  <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Tênis Branco Casual</h5>
+                    <p class="card-text">Combina com tudo! Confortável e moderno.</p>
+                    <p class="text-primary fw-bold">R$ 219,90</p>
+                    <a href="#" class="btn btn-outline-primary mt-auto">Comprar</a>
+                  </div>
+                </div>
+              </div>
+
+          <!-- Produto -->
+          <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100">
+        <div class="favorite-checkbox">
+          <input type="checkbox" id="fav3">
+          <label for="fav3"><i class="fas fa-heart"></i></label>
+        </div>
+              <img src="../IMG/roupas/r3.webp" class="card-img-top product-img" alt="Calça Jeans">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Calça Jeans Slim</h5>
+                <p class="card-text">Modelo ajustado, ideal para um visual moderno.</p>
+                <p class="text-primary fw-bold">R$ 139,90</p>
+                <a href="#" class="btn btn-outline-primary mt-auto">Comprar</a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Produto -->
-        <div class="col-md-4">
-          <div class="card h-100">
-      <div class="favorite-checkbox">
-        <input type="checkbox" id="fav3">
-        <label for="fav3"><i class="fas fa-heart"></i></label>
-      </div>
-            <img src="../IMG/roupas/r3.webp" class="card-img-top product-img" alt="Calça Jeans">
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">Calça Jeans Slim</h5>
-              <p class="card-text">Modelo ajustado, ideal para um visual moderno.</p>
-              <p class="text-primary fw-bold">R$ 139,90</p>
-              <a href="#" class="btn btn-outline-primary mt-auto">Comprar</a>
+
+
+          <!-- Produto -->
+          <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100">
+        <div class="favorite-checkbox">
+          <input type="checkbox" id="fav4">
+          <label for="fav4"><i class="fas fa-heart"></i></label>
+        </div>
+              <img src="../IMG/roupas/r4.webp" class="card-img-top product-img" alt="Blusa Básica">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Vestido Midi Floral</h5>
+                <p class="card-text">Romântico e ideal para dias ensolarados.</p>
+                <p class="text-primary fw-bold">R$ 79,90 (20% OFF)</p>
+                <a href="#" class="btn btn-outline-primary mt-auto">Comprar</a>
+              </div>
             </div>
           </div>
+
+          <!-- Produto -->
+          <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100">
+        <div class="favorite-checkbox">
+          <input type="checkbox" id="fav5">
+          <label for="fav5"><i class="fas fa-heart"></i></label>
         </div>
-
-      </div>
-    </div>
-
-    <div class="container"><br>
-      <div class="row g-4">
-
-        <!-- Produto -->
-        <div class="col-md-4">
-          <div class="card h-100">
-      <div class="favorite-checkbox">
-        <input type="checkbox" id="fav4">
-        <label for="fav4"><i class="fas fa-heart"></i></label>
-      </div>
-            <img src="../IMG/roupas/r4.webp" class="card-img-top product-img" alt="Blusa Básica">
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">Vestido Midi Floral</h5>
-              <p class="card-text">Romântico e ideal para dias ensolarados.</p>
-              <p class="text-primary fw-bold">R$ 79,90 (20% OFF)</p>
-              <a href="#" class="btn btn-outline-primary mt-auto">Comprar</a>
+              <img src="../IMG/roupas/r5.webp" class="card-img-top product-img" alt="Tênis Branco">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Saia Jeans Curta</h5>
+                <p class="card-text">Peça versátil para o verão.</p>
+                <p class="text-primary fw-bold">R$ 219,90</p>
+                <a href="#" class="btn btn-outline-primary mt-auto">Comprar</a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Produto -->
-        <div class="col-md-4">
-          <div class="card h-100">
-      <div class="favorite-checkbox">
-        <input type="checkbox" id="fav5">
-        <label for="fav5"><i class="fas fa-heart"></i></label>
-      </div>
-            <img src="../IMG/roupas/r5.webp" class="card-img-top product-img" alt="Tênis Branco">
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">Saia Jeans Curta</h5>
-              <p class="card-text">Peça versátil para o verão.</p>
-              <p class="text-primary fw-bold">R$ 219,90</p>
-              <a href="#" class="btn btn-outline-primary mt-auto">Comprar</a>
+          <!-- Produto -->
+          <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100">
+        <div class="favorite-checkbox">
+          <input type="checkbox" id="fav6">
+          <label for="fav6"><i class="fas fa-heart"></i></label>
+        </div>
+              <img src="../IMG/roupas/r6.webp" class="card-img-top product-img" alt="Calça Jeans">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Salto Alto Nude</h5>
+                <p class="card-text">Elegância e estilo para ocasiões especiais.</p>
+                <p class="text-primary fw-bold">R$ 139,90</p>
+                <a href="#" class="btn btn-outline-primary mt-auto">Comprar</a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Produto -->
-        <div class="col-md-4">
-          <div class="card h-100">
-      <div class="favorite-checkbox">
-        <input type="checkbox" id="fav6">
-        <label for="fav6"><i class="fas fa-heart"></i></label>
-      </div>
-            <img src="../IMG/roupas/r6.webp" class="card-img-top product-img" alt="Calça Jeans">
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">Salto Alto Nude</h5>
-              <p class="card-text">Elegância e estilo para ocasiões especiais.</p>
-              <p class="text-primary fw-bold">R$ 139,90</p>
-              <a href="#" class="btn btn-outline-primary mt-auto">Comprar</a>
+
+
+          <!-- Produto -->
+          <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100">
+        <div class="favorite-checkbox">
+          <input type="checkbox" id="fav7">
+          <label for="fav7"><i class="fas fa-heart"></i></label>
+        </div>
+              <img src="../IMG/roupas/r7.webp" class="card-img-top product-img" alt="Blusa Básica">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Camiseta Básica Branca</h5>
+                <p class="card-text">Ideal para looks casuais e confortáveis.</p>
+                <p class="text-primary fw-bold">R$ 79,90 (20% OFF)</p>
+                <a href="#" class="btn btn-outline-primary mt-auto">Comprar</a>
+              </div>
             </div>
           </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="container"><br>
-      <div class="row g-4">
 
         <!-- Produto -->
-        <div class="col-md-4">
-          <div class="card h-100">
-      <div class="favorite-checkbox">
-        <input type="checkbox" id="fav7">
-        <label for="fav7"><i class="fas fa-heart"></i></label>
-      </div>
-            <img src="../IMG/roupas/r7.webp" class="card-img-top product-img" alt="Blusa Básica">
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">Camiseta Básica Branca</h5>
-              <p class="card-text">Ideal para looks casuais e confortáveis.</p>
-              <p class="text-primary fw-bold">R$ 79,90 (20% OFF)</p>
-              <a href="#" class="btn btn-outline-primary mt-auto">Comprar</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Produto -->
-        <div class="col-md-4">
+        <div class="col-12 col-sm-6 col-md-4">
           <div class="card h-100">
       <div class="favorite-checkbox">
         <input type="checkbox" id="fav8">
@@ -259,7 +255,7 @@
         </div>
 
         <!-- Produto -->
-        <div class="col-md-4">
+        <div class="col-12 col-sm-6 col-md-4">
           <div class="card h-100">
       <div class="favorite-checkbox">
         <input type="checkbox" id="fav9">
