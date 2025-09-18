@@ -1,3 +1,82 @@
+<?php
+session_start();
+
+require 'ADMIN/db.php';
+
+if (!isset($_SESSION['usuario_id'])) {
+    // Usuário não logado, pode redirecionar ou mostrar erro
+    header('Location: login.php');
+    exit;
+}
+
+$usuario_id = $_SESSION['usuario_id'];
+
+$tp = $_GET['tp'] ?? '';
+$produto_id_url = $_GET['produto_id'] ?? null;
+
+$itens = [];
+$total = 0;
+
+if ($produto_id_url) {
+    // Se veio produto_id, busca só ele para compra direta
+    $stmt = $pdo->prepare("SELECT id AS produto_id, nome, preco, imagem FROM Produto WHERE id = ?");
+    $stmt->execute([$produto_id_url]);
+    $produto = $stmt->fetch();
+
+    if ($produto) {
+        $itens[] = [
+            'item_id' => null,       // não existe item no carrinho ainda
+            'produto_id' => $produto['produto_id'],
+            'nome' => $produto['nome'],
+            'preco' => $produto['preco'],
+            'imagem' => $produto['imagem'],
+            'quantidade' => 1         // quantidade padrão 1 para compra direta
+        ];
+        $total = $produto['preco'] * 1;
+    } else {
+        // Produto não encontrado
+        echo "Produto não encontrado.";
+        exit;
+    }
+} elseif ($tp === 'carrinho') {
+    // Busca o carrinho mais recente do usuário
+    $stmt = $pdo->prepare("SELECT id FROM Carrinho WHERE usuario_id = ? ORDER BY id DESC LIMIT 1");
+    $stmt->execute([$usuario_id]);
+    $carrinho = $stmt->fetch();
+
+    if ($carrinho) {
+        $carrinho_id = $carrinho['id'];
+
+        // Busca os itens do carrinho com os dados dos produtos
+        $stmt = $pdo->prepare("
+            SELECT ci.id AS item_id, p.id AS produto_id, p.nome, p.preco, p.imagem, ci.quantidade
+            FROM Carrinho_Item ci
+            JOIN Produto p ON p.id = ci.produto_id
+            WHERE ci.carrinho_id = ?
+        ");
+        $stmt->execute([$carrinho_id]);
+        $itens = $stmt->fetchAll();
+
+        foreach ($itens as $item) {
+            $subtotal = $item['preco'] * $item['quantidade'];
+            $total += $subtotal;
+        }
+    }
+} else {
+    // Se nenhum parâmetro, pode redirecionar ou carregar carrinho por padrão
+    header('Location: carrinho.php');
+    exit;
+}
+
+$frete = 15.00;
+$total_com_frete = $total + $frete;
+
+?>
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -38,7 +117,7 @@
     <!-- Navbar -->
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-          <a class="navbar-brand" href="index.html">  <div class="logo">
+          <a class="navbar-brand" href="index.php">  <div class="logo">
           <div class="logo-icon">M</div>
           <div class="logo-text">Moda<span class="highlight">Top</span></div>
         </div>
@@ -67,21 +146,21 @@
       
             <!-- Links do menu -->
             <ul class="navbar-nav ms-3">
-              <li class="nav-item"><a class="nav-link " href="index.html">Início</a></li>
-                            <li class="nav-item"><a class="nav-link" href="produtos.html">Produtos</a></li>
-                <li class="nav-item"><a class="nav-link" href="carrinho.html">Carrinho</a></li>
-              <li class="nav-item"><a class="nav-link" href="sobre.html">Sobre</a></li>
-                          <li class="nav-item"><a class="nav-link" href="contato.html">Contato</a></li>
+              <li class="nav-item"><a class="nav-link " href="index.php">Início</a></li>
+                            <li class="nav-item"><a class="nav-link" href="produtos.php">Produtos</a></li>
+                <li class="nav-item"><a class="nav-link" href="carrinho.php">Carrinho</a></li>
+              <li class="nav-item"><a class="nav-link" href="sobre.php">Sobre</a></li>
+                          <li class="nav-item"><a class="nav-link" href="contato.php">Contato</a></li>
                     <!-- Dropdown de Login -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Login
           </a>
           <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="loginDropdown">
-            <li><a class="dropdown-item" href="login.html">Logar</a></li>
-            <li><a class="dropdown-item" href="cadastro.html">Cadastrar</a></li>
+            <li><a class="dropdown-item" href="login.php">Logar</a></li>
+            <li><a class="dropdown-item" href="cadastro.php">Cadastrar</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="logout.html">Sair</a></li>
+            <li><a class="dropdown-item" href="logout.php">Sair</a></li>
           </ul>
         </li>
             </ul>
@@ -110,7 +189,7 @@
         <img src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=chavePIXmodatop@banco.com" alt="QR Code PIX" class="pix-img mb-4">
 
         <!-- Valor -->
-        <h4 class="text-success fw-bold mb-3">Valor: R$ 134,90</h4>
+        <h4 class="text-success fw-bold mb-3">Valor: R$ <?= number_format($total + 15, 2, ',', '.') ?></h4>
 
         <!-- Chave PIX -->
         <p class="mb-1"><strong>Ou copie a chave PIX:</strong></p>
@@ -123,7 +202,7 @@
         </div>
 
         <!-- Botão voltar -->
-        <a href="index.html" class="btn btn-secondary mt-3"><i class="bi bi-arrow-left"></i> Voltar para a loja</a>
+        <a href="compra.php?tp=<?php echo $tp; ?>" class="btn btn-secondary mt-3"><i class="bi bi-arrow-left"></i> Voltar para a loja</a>
       </div>
     </div>
   </div>

@@ -2,10 +2,10 @@
 $host = "localhost";
 $user = "root";
 $pass = "root";
-$dbname = "Moda_top";
+$dbname = "moda_top";
 
 try {
-    $pdo = new PDO("pgsql:host=$host;dbname=$dbname", $user, $pass); 
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass); 
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Erro na conexão: " . $e->getMessage());

@@ -101,3 +101,19 @@ CREATE TABLE Plataforma_Produto (
     produto_id INT NOT NULL REFERENCES Produto(id),
     PRIMARY KEY (plataforma_id, produto_id)
 );
+
+-- Tabela principal do carrinho (um por usuário)
+CREATE TABLE Carrinho (
+    id SERIAL PRIMARY KEY,
+    usuario_id INT NOT NULL REFERENCES Usuario(id),
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Itens do carrinho (vários produtos no mesmo carrinho)
+CREATE TABLE Carrinho_Item (
+    id SERIAL PRIMARY KEY,
+    carrinho_id INT NOT NULL REFERENCES Carrinho(id) ON DELETE CASCADE,
+    produto_id INT NOT NULL REFERENCES Produto(id),
+    quantidade INT NOT NULL CHECK (quantidade > 0),
+    adicionado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

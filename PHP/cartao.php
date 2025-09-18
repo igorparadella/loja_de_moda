@@ -17,7 +17,7 @@
   <!-- Navbar -->
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-      <a class="navbar-brand" href="index.html">  <div class="logo">
+      <a class="navbar-brand" href="index.php">  <div class="logo">
           <div class="logo-icon">M</div>
           <div class="logo-text">Moda<span class="highlight">Top</span></div>
         </div>
@@ -46,21 +46,21 @@
   
         <!-- Links do menu -->
         <ul class="navbar-nav ms-3">
-          <li class="nav-item"><a class="nav-link " href="index.html">Início</a></li>
-                        <li class="nav-item"><a class="nav-link" href="produtos.html">Produtos</a></li>
-            <li class="nav-item"><a class="nav-link" href="carrinho.html">Carrinho</a></li>
-          <li class="nav-item"><a class="nav-link" href="sobre.html">Sobre</a></li>
-                      <li class="nav-item"><a class="nav-link" href="contato.html">Contato</a></li>
+          <li class="nav-item"><a class="nav-link " href="index.php">Início</a></li>
+                        <li class="nav-item"><a class="nav-link" href="produtos.php">Produtos</a></li>
+            <li class="nav-item"><a class="nav-link" href="carrinho.php">Carrinho</a></li>
+          <li class="nav-item"><a class="nav-link" href="sobre.php">Sobre</a></li>
+                      <li class="nav-item"><a class="nav-link" href="contato.php">Contato</a></li>
                     <!-- Dropdown de Login -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Login
           </a>
           <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="loginDropdown">
-            <li><a class="dropdown-item" href="login.html">Logar</a></li>
-            <li><a class="dropdown-item" href="cadastro.html">Cadastrar</a></li>
+            <li><a class="dropdown-item" href="login.php">Logar</a></li>
+            <li><a class="dropdown-item" href="cadastro.php">Cadastrar</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="logout.html">Sair</a></li>
+            <li><a class="dropdown-item" href="logout.php">Sair</a></li>
           </ul>
         </li>
         </ul>

@@ -133,3 +133,30 @@ background-position: center;
     display: none;
   }
 }
+
+.asdf2{
+  width: 100% !important;
+  color: red !important;
+}
+
+  /* Define a animação de descida + fade-in */
+  @keyframes slideDownFade {
+    0% {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-30px); /* começa um pouco acima e centralizado */
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0); /* posição final */
+    }
+  }
+
+  .fixed-top-auto {
+    position: fixed;
+    top: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1030;
+    width: auto;
+    animation: slideDownFade 0.5s ease forwards; /* duração e easing da animação */
+  }

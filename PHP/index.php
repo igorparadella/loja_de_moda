@@ -1,3 +1,58 @@
+<?php
+// Ativa os erros para debug
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Conexão com o banco
+require 'ADMIN/db.php';
+
+// Inicializa a query
+$sql = "SELECT p.id, p.nome, p.preco, p.imagem, c.nome AS categoria
+        FROM Produto p
+        INNER JOIN Categoria c ON p.categoria_id = c.id
+        WHERE 1=1";
+
+// Parâmetros para filtros
+$params = [];
+
+// Filtros opcionais
+if (!empty($_GET['nome'])) {
+    $sql .= " AND p.nome LIKE :nome";
+    $params[':nome'] = '%' . $_GET['nome'] . '%';
+}
+
+if (!empty($_GET['categoria'])) {
+  $sql .= " AND c.id = :categoria";
+  $params[':categoria'] = $_GET['categoria'];
+  
+}
+
+if (!empty($_GET['tamanho'])) {
+    $sql .= " AND p.tamanho = :tamanho";
+    $params[':tamanho'] = $_GET['tamanho'];
+}
+
+if (!empty($_GET['preco'])) {
+    $sql .= " AND p.preco <= :preco";
+    $params[':preco'] = $_GET['preco'];
+}
+
+
+
+$sql .= " ORDER BY p.id DESC";
+
+// Executa a consulta
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+$stmt = $pdo->prepare("SELECT id, nome FROM Categoria ORDER BY nome ASC");
+$stmt->execute();
+$categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -18,7 +73,7 @@
     <!-- Navbar -->
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
-        <a class="navbar-brand" href="index.html">  <div class="logo">
+        <a class="navbar-brand" href="index.php">  <div class="logo">
           <div class="logo-icon">M</div>
           <div class="logo-text">Moda<span class="highlight">Top</span></div>
         </div>
@@ -38,46 +93,53 @@
           </button>
     
           <!-- Campo de busca escondido -->
-          <form id="searchForm" class="d-flex d-none" role="search">
-            <input class="form-control me-2" type="search" placeholder="Buscar produtos..." aria-label="Buscar">
-            <button class="btn btn-outline-light" type="submit">
-              <i class="bi bi-arrow-right"></i>
-            </button>
-          </form>
+          <form id="searchForm" class="d-flex d-none" role="search" method="GET" action="produtos.php">
+  <input class="form-control me-2" type="search" name="nome" placeholder="Buscar produtos..." aria-label="Buscar"
+         value="<?= htmlspecialchars($_GET['nome'] ?? '') ?>">
+  <button class="btn btn-outline-light" type="submit">
+    <i class="bi bi-arrow-right"></i>
+  </button>
+</form>
+
     
           <!-- Links do menu -->
           <ul class="navbar-nav ms-3">
-            <li class="nav-item"><a class="nav-link active" href="index.html">Início</a></li>
-                          <li class="nav-item"><a class="nav-link" href="produtos.html">Produtos</a></li>
-              <li class="nav-item"><a class="nav-link" href="carrinho.html">Carrinho</a></li>
-            <li class="nav-item"><a class="nav-link" href="sobre.html">Sobre</a></li>
-                        <li class="nav-item"><a class="nav-link" href="contato.html">Contato</a></li>
+            <li class="nav-item"><a class="nav-link active" href="index.php">Início</a></li>
+                          <li class="nav-item"><a class="nav-link " href="produtos.php">Produtos</a></li>
+              <li class="nav-item"><a class="nav-link" href="carrinho.php">Carrinho</a></li>
+            <li class="nav-item"><a class="nav-link" href="sobre.php">Sobre</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contato.php">Contato</a></li>
                     <!-- Dropdown de Login -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Login
           </a>
           <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="loginDropdown">
-            <li><a class="dropdown-item" href="login.html">Logar</a></li>
-            <li><a class="dropdown-item" href="cadastro.html">Cadastrar</a></li>
+            <li><a class="dropdown-item" href="perfil.php">Perfil</a></li>
+            <li><a class="dropdown-item" href="login.php">Logar</a></li>
+            <li><a class="dropdown-item" href="cadastro.php">Cadastrar</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="logout.html">Sair</a></li>
+            <li><a class="dropdown-item" href="logout.php">Sair</a></li>
           </ul>
         </li>
           </ul>
         </div>
       </div>
-    </nav>
-    
+    </nav>    
     <!-- Script para alternar visibilidade -->
     <script>
-      const toggleBtn = document.getElementById('searchToggle');
-      const searchForm = document.getElementById('searchForm');
-    
-      toggleBtn.addEventListener('click', () => {
-        searchForm.classList.toggle('d-none');
-      });
+  const toggleBtn = document.getElementById('searchToggle');
+  const searchContainer = document.getElementById('searchForm');
+
+  toggleBtn.addEventListener('click', () => {
+    searchContainer.classList.toggle('d-none');
+  });
+
     </script>
+    
+<?php
+require 'notificacao.php';
+?>
     
   
 
@@ -94,7 +156,7 @@
         <div class="col-md-4 p-5">
           <h1 class="display-5">Coleção Primavera 2025</h1>
           <p>Estilo e conforto para todas as ocasiões.</p>
-          <a href="produtos.html" class="btn btn-light btn-lg mt-2">Ver Produtos</a>
+          <a href="produtos.php" class="btn btn-light btn-lg mt-2">Ver Produtos</a>
         </div>
   
         <!-- Parte 3 -->
@@ -128,7 +190,7 @@
         <h5 class="card-title">Blusa Básica Feminina</h5>
         <p class="card-text">Leve e confortável, ideal para o dia a dia.</p>
         <p class="text-primary fw-bold">R$ 79,99 <s>R$100,00</s> (20% OFF)</p>
-        <a href="r1.html" class="btn btn-outline-primary mt-auto">Comprar</a>
+        <a href="r1.php" class="btn btn-outline-primary mt-auto">Comprar</a>
       </div>
     </div>
   </div>

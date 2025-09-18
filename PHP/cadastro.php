@@ -13,52 +13,78 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-  <!-- Navbar -->
-  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">  <div class="logo">
+
+    <!-- Navbar -->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="index.php">  <div class="logo">
           <div class="logo-icon">M</div>
           <div class="logo-text">Moda<span class="highlight">Top</span></div>
         </div>
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <button id="searchToggle" class="btn btn-outline-light me-2 ms-auto" type="button">
-          <i class="bi bi-search"></i>
+    
+        <!-- Toggle do menu -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
         </button>
-
-        <form id="searchForm" class="d-flex d-none" role="search">
-          <input class="form-control me-2" type="search" placeholder="Buscar produtos..." aria-label="Buscar">
-          <button class="btn btn-outline-light" type="submit">
-            <i class="bi bi-arrow-right"></i>
+    
+        <!-- Itens da navbar -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+    
+          <!-- Ícone da lupa -->
+          <button id="searchToggle" class="btn btn-outline-light me-2 ms-auto" type="button">
+            <i class="bi bi-search"></i>
           </button>
-        </form>
+    
+          <!-- Campo de busca escondido -->
+          <form id="searchForm" class="d-flex d-none" role="search" method="GET" action="produtos.php">
+  <input class="form-control me-2" type="search" name="nome" placeholder="Buscar produtos..." aria-label="Buscar"
+         value="<?= htmlspecialchars($_GET['nome'] ?? '') ?>">
+  <button class="btn btn-outline-light" type="submit">
+    <i class="bi bi-arrow-right"></i>
+  </button>
+</form>
 
-        <ul class="navbar-nav ms-3">
-          <li class="nav-item"><a class="nav-link " href="index.html">Início</a></li>
-          <li class="nav-item"><a class="nav-link" href="produtos.html">Produtos</a></li>
-          <li class="nav-item"><a class="nav-link" href="carrinho.html">Carrinho</a></li>
-          <li class="nav-item"><a class="nav-link" href="sobre.html">Sobre</a></li>
-          <li class="nav-item"><a class="nav-link" href="contato.html">Contato</a></li>
-
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Login
-            </a>
-            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="loginDropdown">
-              <li><a class="dropdown-item" href="login.html">Logar</a></li>
-              <li><a class="dropdown-item" href="cadastro.html">Cadastrar</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="logout.html">Sair</a></li>
-            </ul>
-          </li>
-        </ul>
+    
+          <!-- Links do menu -->
+          <ul class="navbar-nav ms-3">
+            <li class="nav-item"><a class="nav-link" href="index.php">Início</a></li>
+                          <li class="nav-item"><a class="nav-link " href="produtos.php">Produtos</a></li>
+              <li class="nav-item"><a class="nav-link" href="carrinho.php">Carrinho</a></li>
+            <li class="nav-item"><a class="nav-link" href="sobre.php">Sobre</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contato.php">Contato</a></li>
+                    <!-- Dropdown de Login -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Login
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="loginDropdown">
+            <li><a class="dropdown-item" href="perfil.php">Perfil</a></li>
+            <li><a class="dropdown-item" href="login.php">Logar</a></li>
+            <li><a class="dropdown-item" href="cadastro.php">Cadastrar</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="logout.php">Sair</a></li>
+          </ul>
+        </li>
+          </ul>
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>    
+    <!-- Script para alternar visibilidade -->
+    <script>
+  const toggleBtn = document.getElementById('searchToggle');
+  const searchContainer = document.getElementById('searchForm');
+
+  toggleBtn.addEventListener('click', () => {
+    searchContainer.classList.toggle('d-none');
+  });
+
+    </script>
+    
+<?php
+require 'notificacao.php';
+?>
+    
 
 
 <!-- Multi-step Form com Barra de Progresso -->
@@ -71,8 +97,8 @@
       <div class="progress-bar bg-primary" role="progressbar" id="progressBar" style="width: 25%;"></div>
     </div>
 
-    <form id="cadastroForm">
-      <!-- Etapa 1 -->
+    <form id="cadastroForm" action="cad.php" method="POST">
+    <!-- Etapa 1 -->
       <div class="form-step">
         <h5 class="mb-3">1. Dados Pessoais</h5>
         <div class="mb-3">
@@ -243,7 +269,7 @@
 
       <!-- Link login -->
       <div class="text-center mt-4">
-        <a href="login.html">Já tem uma conta? Logar-se</a>
+        <a href="login.php">Já tem uma conta? Logar-se</a>
       </div>
     </form>
   </div>
@@ -260,46 +286,66 @@
 
 
   
-
   <script>
-    const steps = document.querySelectorAll(".form-step");
-    const nextBtn = document.getElementById("nextBtn");
-    const prevBtn = document.getElementById("prevBtn");
-    const submitBtnContainer = document.getElementById("submitBtnContainer");
-    const progressBar = document.getElementById("progressBar");
-  
-    let currentStep = 0;
-  
-    function updateForm() {
-      steps.forEach((step, index) => {
-        step.classList.toggle("d-none", index !== currentStep);
-      });
-  
-      prevBtn.style.display = currentStep === 0 ? "none" : "inline-block";
-      nextBtn.classList.toggle("d-none", currentStep === steps.length - 1);
-      submitBtnContainer.classList.toggle("d-none", currentStep !== steps.length - 1);
-  
-      const progress = ((currentStep + 1) / steps.length) * 100;
-      progressBar.style.width = progress + "%";
+  const steps = document.querySelectorAll(".form-step");
+  const nextBtn = document.getElementById("nextBtn");
+  const prevBtn = document.getElementById("prevBtn");
+  const submitBtnContainer = document.getElementById("submitBtnContainer");
+  const progressBar = document.getElementById("progressBar");
+
+  let currentStep = 0;
+
+  function atualizaResumo() {
+  const form = document.getElementById('cadastroForm');
+
+  const nome = form.querySelector('input[name="nome"]').value;
+  const email = form.querySelector('input[name="email"]').value;
+  const telefone = form.querySelector('input[name="telefone"]').value;
+
+  console.log('Resumo atualizado:', { nome, email, telefone }); // DEBUG
+
+  document.getElementById('resumo-nome').textContent = nome || '(não informado)';
+  document.getElementById('resumo-email').textContent = email || '(não informado)';
+  document.getElementById('resumo-telefone').textContent = telefone || '(não informado)';
+}
+
+
+  function updateForm() {
+    steps.forEach((step, index) => {
+      step.classList.toggle("d-none", index !== currentStep);
+    });
+
+    prevBtn.style.display = currentStep === 0 ? "none" : "inline-block";
+    nextBtn.classList.toggle("d-none", currentStep === steps.length - 1);
+    submitBtnContainer.classList.toggle("d-none", currentStep !== steps.length - 1);
+
+    const progress = ((currentStep + 1) / steps.length) * 100;
+    progressBar.style.width = progress + "%";
+
+    // Se for a última etapa, atualiza o resumo
+    if (currentStep === steps.length - 1) {
+      atualizaResumo();
     }
-  
-    nextBtn.addEventListener("click", () => {
-      if (currentStep < steps.length - 1) {
-        currentStep++;
-        updateForm();
-      }
-    });
-  
-    prevBtn.addEventListener("click", () => {
-      if (currentStep > 0) {
-        currentStep--;
-        updateForm();
-      }
-    });
-  
-    updateForm();
-  </script>
-  
+  }
+
+  nextBtn.addEventListener("click", () => {
+    // Aqui você pode adicionar validações específicas por etapa, se quiser
+    if (currentStep < steps.length - 1) {
+      currentStep++;
+      updateForm();
+    }
+  });
+
+  prevBtn.addEventListener("click", () => {
+    if (currentStep > 0) {
+      currentStep--;
+      updateForm();
+    }
+  });
+
+  updateForm();
+</script>
+
   
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
