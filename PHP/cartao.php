@@ -81,6 +81,7 @@
 
 <div class="wrapper" id="app">
     <div class="card-form">
+    <form action="finalizar.php?tp=<?php echo $tp; ?>&produto_id=<?php echo $produto_id_url; ?>">
       <div class="card-list">
         <div class="card-item" v-bind:class="{ '-active' : isCardFlipped }">
           <div class="card-item__side -front">
@@ -236,7 +237,7 @@
         </button>
       </div>
     </div>
-    
+    </form>
   </div>
 
 

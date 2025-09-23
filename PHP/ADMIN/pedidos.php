@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION['admin_id'])) {
+    header('Location: login.php');
+    exit;
+}
 require_once 'db.php';
 
 // Consulta pedidos com informações do usuário
@@ -82,6 +87,7 @@ function getProdutosPedido($pdo, $pedido_id) {
     <a href="usuarios.php">👥 Usuários</a>
     <a href="pedidos.php">📦 Pedidos</a>
     <a href="configuracoes.php">⚙️ Configurações</a>
+    <a href="logout.php"><i class="bi bi-box-arrow-right"></i> Sair</a>
 </div>
 
 <!-- Conteúdo principal -->

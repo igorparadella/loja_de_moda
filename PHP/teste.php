@@ -40,21 +40,32 @@ $stmt->execute();
 $produtosMasculinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Loja de Roupas</title>
+  <title>Produtos - ModaTop</title>
+
+  <!-- Estilos e ícones -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <link href="../CSS/index.css" rel="stylesheet">
-  
   <link href="../CSS/logo.css" rel="stylesheet">
-  
 </head>
-<body>
+
+
+
+
+
+
+<body class="d-flex flex-column min-vh-100">
+  <main class="flex-grow-1">
+  
+<!-- Navbar -->
 
 
     <!-- Navbar -->
@@ -91,8 +102,8 @@ $produtosMasculinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
           <!-- Links do menu -->
           <ul class="navbar-nav ms-3">
-            <li class="nav-item"><a class="nav-link active" href="index.php">Início</a></li>
-                          <li class="nav-item"><a class="nav-link " href="produtos.php">Produtos</a></li>
+            <li class="nav-item"><a class="nav-link " href="index.php">Início</a></li>
+                          <li class="nav-item"><a class="nav-link active" href="produtos.php">Produtos</a></li>
               <li class="nav-item"><a class="nav-link" href="carrinho.php">Carrinho</a></li>
             <li class="nav-item"><a class="nav-link" href="sobre.php">Sobre</a></li>
                         <li class="nav-item"><a class="nav-link" href="contato.php">Contato</a></li>
@@ -112,48 +123,20 @@ $produtosMasculinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
           </ul>
         </div>
       </div>
-    </nav>    
+    </nav>
+    
     <!-- Script para alternar visibilidade -->
     <script>
-  const toggleBtn = document.getElementById('searchToggle');
-  const searchContainer = document.getElementById('searchForm');
+const toggleBtn = document.getElementById('searchToggle');
+const searchContainer = document.getElementById('searchContainer');
 
-  toggleBtn.addEventListener('click', () => {
-    searchContainer.classList.toggle('d-none');
-  });
+toggleBtn.addEventListener('click', () => {
+  searchContainer.classList.toggle('d-none');
+});
 
     </script>
-    
-<?php
-require 'notificacao.php';
-?>
-    
-  
 
-<!-- Banner dividido em 3 partes -->
-<header class="py-0"><br><br>
-    <div class="container-fluid banner1">
-      <div class="row text-white text-center">
-        
-        <!-- Parte 1 -->
-        <div class="col-md-4 p-5 banner2">
-        </div>
-  
-        <!-- Parte 2 (central) -->
-        <div class="col-md-4 p-5">
-          <h1 class="display-5">Coleção Primavera 2025</h1>
-          <p>Estilo e conforto para todas as ocasiões.</p>
-          <a href="produtos.php" class="btn btn-light btn-lg mt-2">Ver Produtos</a>
-        </div>
-  
-        <!-- Parte 3 -->
-        <div class="col-md-4 p-5 banner3">
-        </div>
-  
-      </div>
-    </div>
-  </header>
-  
+
 <!-- Produtos -->
 <section class="py-5 h-100"><br>
 <div class="container" style="margin-left: 320px;">
@@ -254,15 +237,21 @@ require 'notificacao.php';
 
 </section>
 
+  </main>
+<!-- Rodapé -->
+<footer class="bg-dark text-white text-center py-4 mt-5">
+  <div class="container">
+    <p class="mb-0">&copy; <?= date('Y') ?> ModaTop - Todos os direitos reservados.</p>
+  </div>
+</footer>
 
-  <!-- Rodapé -->
-  <footer class="bg-dark text-white text-center py-4">
-    <div class="container">
-      <p class="mb-1">&copy; 2025 ModaTop - Todos os direitos reservados.</p>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Toggle do formulário de busca na navbar (se houver)
+  document.getElementById('searchToggle')?.addEventListener('click', function () {
+    document.getElementById('searchForm')?.classList.toggle('d-none');
+  });
+</script>
 </body>
 </html>
-

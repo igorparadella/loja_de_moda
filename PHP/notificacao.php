@@ -33,7 +33,10 @@ $messages = [
     ],'car_s' => [
       'text' => '✅ Foi adicionado ao carrinho com sucesso!',
       'class' => 'alert-success' 
-  ]
+  ],'msg_ev_s' => [
+    'text' => '✅ Sua mensagem foi enviada com sucesso!',
+    'class' => 'alert-success' 
+]
 ];
 
 

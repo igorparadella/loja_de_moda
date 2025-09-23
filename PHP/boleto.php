@@ -81,7 +81,42 @@ if ($produto_id_url) {
 $frete = 15.00;
 $total_com_frete = $total + $frete;
 
+// --- INSERÇÃO DO PEDIDO E ITENS ---
+
+try {
+    // Inicia a transação
+    $pdo->beginTransaction();
+
+    // Insere o pedido
+    $stmt = $pdo->prepare("INSERT INTO Pedido (idUsuario, total, status, data, formaPagamento, enderecoEntrega) VALUES (?, ?, ?, CURRENT_DATE, ?, ?)");
+    // Ajuste os valores conforme necessário, aqui usei dados do usuário e valor calculado
+    $formaPagamento = 'Cartão de Crédito'; // exemplo fixo, pode ser dinâmico
+    $status = 'Em processamento';
+    $enderecoEntrega = $usuario['endereco'] ?? 'Endereço não informado';
+
+    $stmt->execute([$usuario_id, $total_com_frete, $status, $formaPagamento, $enderecoEntrega]);
+
+    // Pega o ID do pedido inserido
+    $pedido_id = $pdo->lastInsertId();
+
+    // Insere os produtos do pedido
+    $stmtItem = $pdo->prepare("INSERT INTO Pedido_Produto (pedido_id, produto_id, quantidade) VALUES (?, ?, ?)");
+
+    foreach ($itens as $item) {
+        $stmtItem->execute([$pedido_id, $item['produto_id'], $item['quantidade']]);
+    }
+
+    // Confirma a transação
+    $pdo->commit();
+
+} catch (Exception $e) {
+    $pdo->rollBack();
+    echo "Falha ao processar o pedido: " . $e->getMessage();
+    exit;
+}
+
 ?>
+
 
 
 
@@ -286,7 +321,7 @@ $subtotal = $item['preco'] * $item['quantidade'];
   </div>
 </div>
 
-<a href="compra.php?tp=<?php echo $tp; ?>" class="btn btn-secondary mt-3"><i class="bi bi-arrow-left"></i> Voltar para a loja</a>
+<a href="compra.php?tp=<?php echo $tp; ?>" class="btn btn-secondary mt-3 align-center"><i class="bi bi-arrow-left"></i> Voltar para a loja</a>
 
 
 <!-- Rodapé -->
@@ -308,6 +343,15 @@ $subtotal = $item['preco'] * $item['quantidade'];
     displayValue: false,
     margin: 0
   });
+</script>
+
+<script>
+    var tempo = 2;
+    var corret = tempo * 1000;
+
+    setTimeout(function() {
+        window.location.href = "finalizar.php?tp=<?php echo $tp; ?>&produto_id=<?php echo $produto_id_url; ?>";
+    }, corret);
 </script>
 
 </body>

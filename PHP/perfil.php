@@ -1,26 +1,43 @@
 <?php
 session_start();
-require 'ADMIN/db.php';  // Ajuste para seu arquivo de conexão PDO
+require 'ADMIN/db.php';  // conexão PDO
 
 if (!isset($_SESSION['usuario_id'])) {
-  // Redireciona para login.php com mensagem
   header("Location: login.php?msg=login_obrigatorio");
   exit();
 }
 
-
 $usuario_id = $_SESSION['usuario_id'];
 
-// Busca dados do usuário no banco
+// Busca dados do usuário
 $stmt = $pdo->prepare('SELECT nome, email, genero, telefone, endereco FROM Usuario WHERE id = ?');
 $stmt->execute([$usuario_id]);
 $usuario = $stmt->fetch();
 
 if (!$usuario) {
-    // Usuário não encontrado (algo errado)
     echo "Usuário não encontrado.";
     exit;
 }
+
+// Busca os pedidos do usuário
+$stmt = $pdo->prepare('SELECT * FROM Pedido WHERE idUsuario = ? ORDER BY data DESC');
+$stmt->execute([$usuario_id]);
+$pedidos = $stmt->fetchAll();
+
+// Para cada pedido, buscar os produtos relacionados
+foreach ($pedidos as &$pedido) {
+    $stmt = $pdo->prepare('
+        SELECT p.nome, pp.quantidade, p.preco
+        FROM Pedido_Produto pp
+        JOIN Produto p ON p.id = pp.produto_id
+        WHERE pp.pedido_id = ?
+    ');
+    $stmt->execute([$pedido['id']]);
+    $pedido['produtos'] = $stmt->fetchAll();
+}
+unset($pedido);  // limpar referência
+?>
+
 ?>
 
 <!DOCTYPE html>
@@ -33,9 +50,9 @@ if (!$usuario) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <link href="../CSS/index.css" rel="stylesheet" />
   <link href="../CSS/logo.css" rel="stylesheet" />
-</head>
-<body>
-  <!-- Navbar aqui (igual ao seu) -->
+  </head>
+<body class="d-flex flex-column min-vh-100">
+<main class="flex-fill">
    
 
     <!-- Navbar -->
@@ -137,7 +154,7 @@ require 'notificacao.php';
           <i class="bi bi-cart"></i>
           Carrinho
           </a>
-          <a href="meus-pedidos.php" class="btn btn-outline-dark">
+          <a href="pedidos.php" class="btn btn-outline-dark">
             <i class="bi bi-bag-check"></i> Ver Pedidos
           </a>
           <a href="logout.php" class="btn btn-danger">
@@ -177,18 +194,54 @@ require 'notificacao.php';
         </div>
 
         <!-- Aba: Pedidos -->
-        <div class="tab-pane fade" id="pedidos" role="tabpanel">
-          <h5>Últimos Pedidos</h5>
-          <ul class="list-group">
-            <!-- Aqui você precisaria buscar os pedidos do usuário, por enquanto vamos deixar fixo -->
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              Pedido #1023 <span class="badge bg-success">Entregue</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              Pedido #1024 <span class="badge bg-warning text-dark">A Caminho</span>
-            </li>
-          </ul>
+<div class="tab-pane fade" id="pedidos" role="tabpanel">
+  <h5>Últimos Pedidos</h5>
+
+  <?php if (count($pedidos) === 0): ?>
+    <p>Você ainda não realizou nenhum pedido.</p>
+  <?php else: ?>
+    <div class="accordion" id="pedidosAccordion">
+      <?php foreach ($pedidos as $index => $pedido): ?>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading<?= $index ?>">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $index ?>" aria-expanded="false" aria-controls="collapse<?= $index ?>">
+              Pedido #<?= htmlspecialchars($pedido['id']) ?> - <?= date('d/m/Y', strtotime($pedido['data'])) ?> - &nbsp
+              <span class="badge 
+                <?php 
+                  switch ($pedido['status']) {
+                    case 'Entregue': echo 'bg-success'; break;
+                    case 'A Caminho': echo 'bg-warning text-dark'; break;
+                    case 'Em processamento': echo 'bg-primary'; break;
+                    default: echo 'bg-secondary';
+                  }
+                ?>">
+                <?= htmlspecialchars($pedido['status']) ?>
+              </span>
+            </button>
+          </h2>
+          <div id="collapse<?= $index ?>" class="accordion-collapse collapse" aria-labelledby="heading<?= $index ?>" data-bs-parent="#pedidosAccordion">
+            <div class="accordion-body">
+              <ul class="list-group mb-2">
+                <?php foreach ($pedido['produtos'] as $produto): ?>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <?= htmlspecialchars($produto['nome']) ?> x <?= $produto['quantidade'] ?>
+                    <span>R$ <?= number_format($produto['preco'], 2, ',', '.') ?></span>
+                  </li>
+                <?php endforeach; ?>
+              </ul>
+              <strong>Total:</strong> R$ <?= number_format($pedido['total'], 2, ',', '.') ?>
+              <br>
+              <strong>Forma de Pagamento:</strong> <?= htmlspecialchars($pedido['formaPagamento'] ?? 'Não informado') ?>
+              <br>
+              <strong>Endereço de Entrega:</strong> <?= nl2br(htmlspecialchars($pedido['enderecoEntrega'] ?? 'Não informado')) ?>
+            </div>
+          </div>
         </div>
+      <?php endforeach; ?>
+    </div>
+  <?php endif; ?>
+</div>
+
 
         <!-- Aba: Endereço -->
         <div class="tab-pane fade" id="endereco" role="tabpanel">
@@ -198,6 +251,10 @@ require 'notificacao.php';
       </div>
     </div>
   </section>
+
+
+  </main>
+
 
   <!-- Rodapé -->
   <footer class="bg-dark text-white text-center py-4 fixed-bottom">

@@ -227,6 +227,18 @@ $total_com_frete = $total + $frete;
         </div>
       </footer>
 
+    
+      <script>
+    var tempo = 2;
+    var corret = tempo * 1000;
+
+    setTimeout(function() {
+        window.location.href = "finalizar.php?tp=<?php echo $tp; ?>&produto_id=<?php echo $produto_id_url; ?>";
+    }, corret);
+</script>
+
+
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

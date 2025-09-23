@@ -74,6 +74,42 @@ if ($produto_id_url) {
 $frete = 15.00;
 $total_com_frete = $total + $frete;
 
+
+
+$usuario_id = $_SESSION['usuario_id'];
+
+// Busca dados do usuário no banco
+$stmt = $pdo->prepare('SELECT nome, email, genero, telefone, endereco FROM Usuario WHERE id = ?');
+$stmt->execute([$usuario_id]);
+$usuario = $stmt->fetch();
+
+if (!$usuario) {
+    // Usuário não encontrado (algo errado)
+    echo "Usuário não encontrado.";
+    exit;
+}
+
+$endereco = $usuario['endereco'];
+
+// Explode por vírgula para separar os campos
+$partes = explode(',', $endereco);
+
+$resultado = [];
+
+foreach ($partes as $parte) {
+    // Remove espaços extras no começo e fim
+    $parte = trim($parte);
+    
+    // Explode pelo ": " para separar chave e valor
+    $info = explode(': ', $parte);
+    
+    if (count($info) == 2) {
+        $chave = trim($info[0]);
+        $valor = trim($info[1]);
+        $resultado[$chave] = $valor;
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -212,35 +248,35 @@ $total_com_frete = $total + $frete;
 
         <div class="mb-3">
           <label for="nome" class="form-label">Nome completo</label>
-          <input type="text" class="form-control" id="nome" name="nome" required />
+          <input type="text" class="form-control" id="nome" name="nome" required value="<?= htmlspecialchars($usuario['nome']) ?>"/>
         </div>
 
         <div class="mb-3">
           <label for="email" class="form-label">E-mail</label>
-          <input type="email" class="form-control" id="email" name="email" required />
+          <input type="email" class="form-control" id="email" name="email" required value="<?= htmlspecialchars($usuario['email']) ?>"/>
         </div>
 
         <div class="mb-3">
           <label for="cep" class="form-label">CEP</label>
-          <input type="text" class="form-control" id="cep" name="cep" required onblur="buscarCep()" />
+          <input type="text" class="form-control" id="cep" name="cep" required onblur="buscarCep()" value="<?= $resultado['CEP']?>"/>
         </div>
 
         <div class="row">
           <div class="col-md-3 mb-3">
             <label for="cidade" class="form-label">Cidade</label>
-            <input type="text" class="form-control" id="cidade" name="cidade" required />
+            <input type="text" class="form-control" id="cidade" name="cidade" required value="<?= $resultado['Cidade']?>"/>
           </div>
           <div class="col-md-3 mb-3">
             <label for="bairro" class="form-label">Bairro</label>
-            <input type="text" class="form-control" id="bairro" name="bairro" required />
+            <input type="text" class="form-control" id="bairro" name="bairro" required value="<?= $resultado['Bairro']?>"/>
           </div>
           <div class="col-md-3 mb-3">
             <label for="rua" class="form-label">Rua</label>
-            <input type="text" class="form-control" id="rua" name="rua" required />
+            <input type="text" class="form-control" id="rua" name="rua" required value="<?= $resultado['Rua']?>"/>
           </div>
           <div class="col-md-3 mb-3">
             <label for="numero" class="form-label">Número</label>
-            <input type="text" class="form-control" id="numero" name="numero" required />
+            <input type="text" class="form-control" id="numero" name="numero" required value="<?= $resultado['Nº']?>"/>
           </div>
         </div>
 
@@ -253,8 +289,9 @@ $total_com_frete = $total + $frete;
           <select class="form-select" id="pagamento" name="pagamento" required>
             <option selected disabled>Escolha...</option>
             <option value="pix">PIX</option>
-            <option value="cartao">Cartão de Crédito</option>
-            <option value="boleto">Boleto Bancário</option>
+            <option value="cartao">Cartão de crédito</option>
+            <option value="cartao2">Cartão de débito</option>
+            <option value="boleto">Boleto bancário</option>
           </select>
         </div>
 
@@ -302,6 +339,9 @@ $total_com_frete = $total + $frete;
     } else if (this.value === "boleto") {
       divParcelas.style.display = "none";
       form.action = "boleto.php?tp=<?php echo $tp; ?>&produto_id=<?php echo $produto_id_url; ?> ";
+    }else if (this.value === "cartao2") {
+      divParcelas.style.display = "none";
+      form.action = "cartao.php?tp=<?php echo $tp; ?>&produto_id=<?php echo $produto_id_url; ?> ";
     } else {
       divParcelas.style.display = "none";
       form.action = "";

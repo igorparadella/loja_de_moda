@@ -69,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
     </div>
+    <a href="../" class="btn btn-secondary w-100 mt-3">Voltar pro site</a>
 </div>
 
 </body>
