@@ -44,29 +44,90 @@ unset($pedido);
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Meus Pedidos - ModaTop</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="../CSS/index.css" rel="stylesheet">
+  
+  <link href="../CSS/logo.css" rel="stylesheet">
 </head>
 <body class="d-flex flex-column min-vh-100">
 <main class="flex-fill">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="index.php">
-        ModaTop
+    <!-- Navbar -->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="index.php">  <div class="logo">
+          <div class="logo-icon">M</div>
+          <div class="logo-text">Moda<span class="highlight">Top</span></div>
+        </div>
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-  
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="perfil.php">Perfil</a></li>
-          <li class="nav-item"><a class="nav-link active" href="pedidos.php">Pedidos</a></li>
-          <li class="nav-item"><a class="nav-link" href="logout.php">Sair</a></li>
-        </ul>
+    
+        <!-- Toggle do menu -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <!-- Itens da navbar -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+    
+          <!-- Ícone da lupa -->
+          <button id="searchToggle" class="btn btn-outline-light me-2 ms-auto" type="button">
+            <i class="bi bi-search"></i>
+          </button>
+    
+          <!-- Campo de busca escondido -->
+          <form id="searchForm" class="d-flex d-none" role="search" method="GET" action="produtos.php">
+  <input class="form-control me-2" type="search" name="nome" placeholder="Buscar produtos..." aria-label="Buscar"
+         value="<?= htmlspecialchars($_GET['nome'] ?? '') ?>">
+  <button class="btn btn-outline-light" type="submit">
+    <i class="bi bi-arrow-right"></i>
+  </button>
+</form>
+
+    
+          <!-- Links do menu -->
+          <ul class="navbar-nav ms-3">
+            <li class="nav-item"><a class="nav-link" href="index.php">Início</a></li>
+                          <li class="nav-item"><a class="nav-link " href="produtos.php">Produtos</a></li>
+              <li class="nav-item"><a class="nav-link" href="carrinho.php">Carrinho</a></li>
+            <li class="nav-item"><a class="nav-link" href="sobre.php">Sobre</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contato.php">Contato</a></li>
+                    <!-- Dropdown de Login -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Login
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="loginDropdown">
+            <li><a class="dropdown-item" href="perfil.php">Perfil</a></li>
+            <li><a class="dropdown-item" href="login.php">Logar</a></li>
+            <li><a class="dropdown-item" href="cadastro.php">Cadastrar</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="logout.php">Sair</a></li>
+          </ul>
+        </li>
+          </ul>
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>    
+    <!-- Script para alternar visibilidade -->
+    <script>
+  const toggleBtn = document.getElementById('searchToggle');
+  const searchContainer = document.getElementById('searchForm');
+
+  toggleBtn.addEventListener('click', () => {
+    searchContainer.classList.toggle('d-none');
+  });
+
+    </script>
+    
+<?php
+require 'notificacao.php';
+?>
+    
+
+  <!-- Produtos -->
+<section class="py-5 h-100"><br>
+<div class="container">
 
     <h2>Meus Pedidos</h2>
     <p>Olá, <?= htmlspecialchars($usuario['nome']) ?>!</p>
@@ -79,7 +140,7 @@ unset($pedido);
           <div class="accordion-item">
             <h2 class="accordion-header" id="heading<?= $index ?>">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $index ?>" aria-expanded="false" aria-controls="collapse<?= $index ?>">
-                Pedido #<?= htmlspecialchars($pedido['id']) ?> - <?= date('d/m/Y', strtotime($pedido['data'])) ?> - 
+                Pedido #<?= htmlspecialchars($pedido['id']) ?> - <?= date('d/m/Y', strtotime($pedido['data'])) ?> - &nbsp
                 <span class="badge 
                   <?php 
                     switch ($pedido['status']) {
@@ -89,6 +150,8 @@ unset($pedido);
                       default: echo 'bg-secondary';
                     }
                   ?>">
+
+                  
                   <?= htmlspecialchars($pedido['status']) ?>
                 </span>
               </button>
@@ -106,6 +169,15 @@ unset($pedido);
                 <p><strong>Total:</strong> R$ <?= number_format($pedido['total'], 2, ',', '.') ?></p>
                 <p><strong>Forma de Pagamento:</strong> <?= htmlspecialchars($pedido['formaPagamento'] ?? 'Não informado') ?></p>
                 <p><strong>Endereço de Entrega:</strong> <?= nl2br(htmlspecialchars($pedido['enderecoEntrega'] ?? 'Não informado')) ?></p>
+
+                <?php if ($pedido['status'] === 'Em processamento'): ?>
+                  <form method="POST" action="cancelar_pedido.php" onsubmit="return confirm('Tem certeza que deseja cancelar este pedido?');">
+                    <input type="hidden" name="pedido_id" value="<?= $pedido['id'] ?>">
+                    <button type="submit" class="btn btn-sm border border-danger text-danger bg-transparent">                      Cancelar Pedido
+                    </button>
+                  </form>
+                <?php endif; ?>
+
               </div>
             </div>
           </div>
@@ -113,6 +185,8 @@ unset($pedido);
       </div>
     <?php endif; ?>
   </main>
+
+  </div></section>
 
   <footer class="bg-dark fixed-bottom text-white text-center py-3">
     <div class="container">

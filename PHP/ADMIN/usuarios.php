@@ -6,12 +6,44 @@ if (!isset($_SESSION['admin_id'])) {
 }
 require_once 'db.php';
 
-// Consulta todos os usuários
-$sql = "SELECT id, nome, email, genero, telefone, endereco FROM Usuario ORDER BY nome ASC";
+// Captura filtros
+$filtro_nome = $_GET['nome'] ?? '';
+$filtro_email = $_GET['email'] ?? '';
+$filtro_telefone = $_GET['telefone'] ?? '';
+$filtro_genero = $_GET['genero'] ?? '';
+
+// Monta query com filtros
+$sql = "SELECT id, nome, email, genero, telefone, endereco FROM Usuario WHERE 1=1";
+$params = [];
+
+if ($filtro_nome !== '') {
+    $sql .= " AND nome LIKE :nome";
+    $params['nome'] = '%' . $filtro_nome . '%';
+}
+
+if ($filtro_email !== '') {
+    $sql .= " AND email LIKE :email";
+    $params['email'] = '%' . $filtro_email . '%';
+}
+
+if ($filtro_telefone !== '') {
+    $sql .= " AND telefone LIKE :telefone";
+    $params['telefone'] = '%' . $filtro_telefone . '%';
+}
+
+if ($filtro_genero !== '') {
+    $sql .= " AND genero = :genero";
+    $params['genero'] = $filtro_genero;
+}
+
+$sql .= " ORDER BY nome ASC";
+
 $stmt = $pdo->prepare($sql);
-$stmt->execute();
+$stmt->execute($params);
 $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -64,7 +96,6 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <a href="categorias.php">📁 Categorias</a>
     <a href="usuarios.php">👥 Usuários</a>
     <a href="pedidos.php">📦 Pedidos</a>
-    <a href="configuracoes.php">⚙️ Configurações</a>
     <a href="logout.php">Sair</a>
 </div>
 
@@ -72,6 +103,22 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="main">
     <h2>Usuários Cadastrados</h2>
     <p class="text-muted">Lista de usuários do sistema</p>
+
+    <form method="GET" class="d-flex align-items-center gap-2 w-100 mb-4" style="flex-wrap: nowrap;">
+    <input type="text" name="nome" class="form-control form-control-sm" placeholder="Nome" style="width: 20%;" value="<?= htmlspecialchars($filtro_nome) ?>">
+    <input type="text" name="email" class="form-control form-control-sm" placeholder="Email" style="width: 25%;" value="<?= htmlspecialchars($filtro_email) ?>">
+    <input type="text" name="telefone" class="form-control form-control-sm" placeholder="Telefone" style="width: 15%;" value="<?= htmlspecialchars($filtro_telefone) ?>">
+    <select name="genero" class="form-select form-select-sm" style="width: 15%;">
+        <option value="">Gênero</option>
+        <option value="Masculino" <?= $filtro_genero === 'Masculino' ? 'selected' : '' ?>>Masculino</option>
+        <option value="Feminino" <?= $filtro_genero === 'Feminino' ? 'selected' : '' ?>>Feminino</option>
+        <option value="Outro" <?= $filtro_genero === 'Outro' ? 'selected' : '' ?>>Outro</option>
+    </select>
+    <button type="submit" class="btn btn-primary btn-sm" style="width: 10%;">Filtrar</button>
+    <a href="usuarios.php" class="btn btn-secondary btn-sm" style="width: 10%;">Limpar Filtros</a>
+</form>
+
+
 
     <?php if ($usuarios): ?>
         <div class="table-responsive">

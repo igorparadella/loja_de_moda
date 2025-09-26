@@ -5,6 +5,95 @@ create database Moda_top;
 use Moda_top;
 
 
+CREATE TABLE `avaliacao` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `produtoId` bigint UNSIGNED NOT NULL,
+  `usuarioId` bigint UNSIGNED NOT NULL,
+  `nota` int NOT NULL,
+  `comentario` text,
+  `data_hora` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `carrinho` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `usuario_id` int NOT NULL,
+  `criado_em` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `carrinho_item` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `carrinho_id` int NOT NULL,
+  `produto_id` int NOT NULL,
+  `quantidade` int NOT NULL,
+  `adicionado_em` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `categoria` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL,
+  `descricao` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `contato` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `mensagem` text NOT NULL,
+  `dataContato` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `pedido` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `idUsuario` int NOT NULL,
+  `total` decimal(10,2) DEFAULT NULL,
+  `status` varchar(50) DEFAULT NULL,
+  `data` date NOT NULL,
+  `formaPagamento` varchar(100) DEFAULT NULL,
+  `enderecoEntrega` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `plataforma` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `segura` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- produto já estava correto:
+-- `id` bigint UNSIGNED AUTO_INCREMENT NOT NULL
+
+CREATE TABLE `promocao` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `descricao` text,
+  `desconto` decimal(5,2) NOT NULL,
+  `validade` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `usuario` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `senha` varchar(255) NOT NULL,
+  `genero` varchar(50) DEFAULT NULL,
+  `telefone` varchar(50) DEFAULT NULL,
+  `endereco` text,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+------------------------------------
+
+
 CREATE TABLE Plataforma (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,

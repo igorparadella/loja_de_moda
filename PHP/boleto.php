@@ -90,7 +90,7 @@ try {
     // Insere o pedido
     $stmt = $pdo->prepare("INSERT INTO Pedido (idUsuario, total, status, data, formaPagamento, enderecoEntrega) VALUES (?, ?, ?, CURRENT_DATE, ?, ?)");
     // Ajuste os valores conforme necessário, aqui usei dados do usuário e valor calculado
-    $formaPagamento = 'Cartão de Crédito'; // exemplo fixo, pode ser dinâmico
+    $formaPagamento = 'Boleto'; // exemplo fixo, pode ser dinâmico
     $status = 'Em processamento';
     $enderecoEntrega = $usuario['endereco'] ?? 'Endereço não informado';
 
@@ -346,7 +346,7 @@ $subtotal = $item['preco'] * $item['quantidade'];
 </script>
 
 <script>
-    var tempo = 2;
+    var tempo = 20;
     var corret = tempo * 1000;
 
     setTimeout(function() {

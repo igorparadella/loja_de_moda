@@ -1,15 +1,24 @@
 <?php
 session_start();
-
 require 'ADMIN/db.php';
 
+// Verifica login
 if (!isset($_SESSION['usuario_id'])) {
-    // Usuário não logado, pode redirecionar ou mostrar erro
     header('Location: login.php');
     exit;
 }
 
 $usuario_id = $_SESSION['usuario_id'];
+
+// Busca dados do usuário
+$stmt = $pdo->prepare('SELECT nome, email, genero, telefone, endereco FROM Usuario WHERE id = ?');
+$stmt->execute([$usuario_id]);
+$usuario = $stmt->fetch();
+
+if (!$usuario) {
+    echo "Usuário não encontrado.";
+    exit;
+}
 
 $tp = $_GET['tp'] ?? '';
 $produto_id_url = $_GET['produto_id'] ?? null;
@@ -17,29 +26,28 @@ $produto_id_url = $_GET['produto_id'] ?? null;
 $itens = [];
 $total = 0;
 
+// Compra direta
 if ($produto_id_url) {
-    // Se veio produto_id, busca só ele para compra direta
     $stmt = $pdo->prepare("SELECT id AS produto_id, nome, preco, imagem FROM Produto WHERE id = ?");
     $stmt->execute([$produto_id_url]);
     $produto = $stmt->fetch();
 
     if ($produto) {
         $itens[] = [
-            'item_id' => null,       // não existe item no carrinho ainda
             'produto_id' => $produto['produto_id'],
-            'nome' => $produto['nome'],
-            'preco' => $produto['preco'],
-            'imagem' => $produto['imagem'],
-            'quantidade' => 1         // quantidade padrão 1 para compra direta
+            'nome'       => $produto['nome'],
+            'preco'      => $produto['preco'],
+            'imagem'     => $produto['imagem'],
+            'quantidade' => 1
         ];
-        $total = $produto['preco'] * 1;
+        $total = $produto['preco'];
     } else {
-        // Produto não encontrado
         echo "Produto não encontrado.";
         exit;
     }
-} elseif ($tp === 'carrinho') {
-    // Busca o carrinho mais recente do usuário
+}
+// Compra pelo carrinho
+elseif ($tp === 'carrinho') {
     $stmt = $pdo->prepare("SELECT id FROM Carrinho WHERE usuario_id = ? ORDER BY id DESC LIMIT 1");
     $stmt->execute([$usuario_id]);
     $carrinho = $stmt->fetch();
@@ -47,7 +55,6 @@ if ($produto_id_url) {
     if ($carrinho) {
         $carrinho_id = $carrinho['id'];
 
-        // Busca os itens do carrinho com os dados dos produtos
         $stmt = $pdo->prepare("
             SELECT ci.id AS item_id, p.id AS produto_id, p.nome, p.preco, p.imagem, ci.quantidade
             FROM Carrinho_Item ci
@@ -58,12 +65,10 @@ if ($produto_id_url) {
         $itens = $stmt->fetchAll();
 
         foreach ($itens as $item) {
-            $subtotal = $item['preco'] * $item['quantidade'];
-            $total += $subtotal;
+            $total += $item['preco'] * $item['quantidade'];
         }
     }
 } else {
-    // Se nenhum parâmetro, pode redirecionar ou carregar carrinho por padrão
     header('Location: carrinho.php');
     exit;
 }
@@ -71,8 +76,33 @@ if ($produto_id_url) {
 $frete = 15.00;
 $total_com_frete = $total + $frete;
 
-?>
+// --- INSERÇÃO DO PEDIDO ---
+try {
+    $pdo->beginTransaction();
 
+    $formaPagamento = 'PIX';
+    $status = 'Em processamento';
+    $enderecoEntrega = $usuario['endereco'] ?? 'Endereço não informado';
+
+    $stmt = $pdo->prepare("INSERT INTO Pedido 
+        (idUsuario, total, status, data, formaPagamento, enderecoEntrega) 
+        VALUES (?, ?, ?, NOW(), ?, ?)");
+    $stmt->execute([$usuario_id, $total_com_frete, $status, $formaPagamento, $enderecoEntrega]);
+
+    $pedido_id = $pdo->lastInsertId();
+
+    $stmtItem = $pdo->prepare("INSERT INTO Pedido_Produto (pedido_id, produto_id, quantidade) VALUES (?, ?, ?)");
+    foreach ($itens as $item) {
+        $stmtItem->execute([$pedido_id, $item['produto_id'], $item['quantidade']]);
+    }
+
+    $pdo->commit();
+} catch (Exception $e) {
+    $pdo->rollBack();
+    echo "Erro ao processar o pedido: " . $e->getMessage();
+    exit;
+}
+?>
 
 
 
@@ -229,7 +259,7 @@ $total_com_frete = $total + $frete;
 
     
       <script>
-    var tempo = 2;
+    var tempo = 20;
     var corret = tempo * 1000;
 
     setTimeout(function() {

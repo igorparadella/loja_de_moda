@@ -38,7 +38,6 @@ foreach ($pedidos as &$pedido) {
 unset($pedido);  // limpar referência
 ?>
 
-?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -257,7 +256,7 @@ require 'notificacao.php';
 
 
   <!-- Rodapé -->
-  <footer class="bg-dark text-white text-center py-4 fixed-bottom">
+  <footer class="bg-dark text-white text-center py-4">
     <div class="container">
       <p class="mb-1">&copy; 2025 ModaTop - Todos os direitos reservados.</p>
     </div>

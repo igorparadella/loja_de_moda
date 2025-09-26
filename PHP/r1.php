@@ -1,9 +1,16 @@
 <?php
 session_start();
-require 'ADMIN/db.php';
+require 'ADMIN/db.php';  // conexão PDO
+
 
 $usuario_id = $_SESSION['usuario_id'];
 
+// Busca dados do usuário
+$stmt = $pdo->prepare('SELECT nome, email, genero, telefone, endereco FROM Usuario WHERE id = ?');
+$stmt->execute([$usuario_id]);
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Verifica se foi passado o produto
 if (!isset($_GET['id'])) {
     echo "Produto não especificado.";
     exit;
@@ -11,15 +18,35 @@ if (!isset($_GET['id'])) {
 
 $produto_id = (int) $_GET['id'];
 
-$stmt = $pdo->prepare("SELECT * FROM Produto WHERE id = ?");
+// Busca os dados do produto
+$stmt = $pdo->prepare("
+    SELECT p.*, c.nome AS categoria_nome
+    FROM Produto p
+    INNER JOIN Categoria c ON c.id = p.categoria_id
+    WHERE p.id = ?
+");
 $stmt->execute([$produto_id]);
 $produto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Buscar produtos relacionados (mesma categoria, exceto o atual)
+$stmt = $pdo->prepare("
+    SELECT id, nome, preco, imagem 
+    FROM Produto 
+    WHERE categoria_id = ? AND id != ? 
+    ORDER BY RAND() 
+    LIMIT 4
+");
+$stmt->execute([$produto['categoria_id'], $produto_id]);
+$relacionados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 if (!$produto) {
   header('Location: ERRO/404.php');
   exit;
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -177,25 +204,30 @@ require 'notificacao.php';
 
 
       <!-- Tamanhos (exemplo fixo, pode ajustar para puxar do banco) -->
-      <form action="adicionar_carrinho.php" method="POST">
-        <input type="hidden" name="produto_id" value="<?= $produto['id'] ?>">
-        <div class="mb-4">
-          <p class="mb-1">Tamanho:</p>
-          <div class="size-option d-flex">
-            <input type="radio" name="tamanho" id="sizeP" value="P" required>
-            <label for="sizeP">P</label>
+      <?php if (
+    !empty($produto['categoria_nome']) && 
+    !in_array(strtolower($produto['categoria_nome']), ['acessórios', 'joias', 'bolsas'])
+): ?>
+  <form action="adicionar_carrinho.php" method="POST">
+    <input type="hidden" name="produto_id" value="<?= $produto['id'] ?>">
+    <div class="mb-4">
+      <p class="mb-1">Tamanho:</p>
+      <div class="size-option d-flex">
+        <input type="radio" name="tamanho" id="sizeP" value="P" required>
+        <label for="sizeP">P</label>
 
-            <input type="radio" name="tamanho" id="sizeM" value="M" required>
-            <label for="sizeM">M</label>
+        <input type="radio" name="tamanho" id="sizeM" value="M" required>
+        <label for="sizeM">M</label>
 
-            <input type="radio" name="tamanho" id="sizeG" value="G" required>
-            <label for="sizeG">G</label>
+        <input type="radio" name="tamanho" id="sizeG" value="G" required>
+        <label for="sizeG">G</label>
 
-            <input type="radio" name="tamanho" id="sizeGG" value="GG" required>
-            <label for="sizeGG">GG</label>
-          </div>
-        </div>
-        </form>
+        <input type="radio" name="tamanho" id="sizeGG" value="GG" required>
+        <label for="sizeGG">GG</label>
+      </div>
+    </div>
+  </form><?php endif; ?>
+
 
         <div class="d-grid gap-2 d-md-block">
         <form action="add_to_cart.php" method="post" class="d-inline">
@@ -220,120 +252,94 @@ require 'notificacao.php';
 <div class="container my-5">
   <h3 class="mb-4">Avaliações dos Clientes</h3>
 
-  <!-- Comentários existentes (exemplo fixo) -->
-  <div class="mb-4">
-    <div class="border rounded p-3 mb-3">
-      <div class="d-flex justify-content-between">
-        <strong>Maria F.</strong>
-        <div class="text-warning">★★★★☆</div>
-      </div>
-      <p class="mb-0">Adorei o tecido e a estampa, bem confortável!</p>
-    </div>
+  <?php
+$stmt = $pdo->prepare("
+    SELECT a.*, u.nome 
+    FROM avaliacao a
+    JOIN usuario u ON u.id = a.usuarioId
+    WHERE a.produtoId = ?
+    ORDER BY a.data_hora DESC
+");
+$stmt->execute([$produto_id]);
+$avaliacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
-    <div class="border rounded p-3 mb-3">
-      <div class="d-flex justify-content-between">
-        <strong>João S.</strong>
-        <div class="text-warning">★★★★★</div>
+<div class="mb-4">
+  <?php if ($avaliacoes): ?>
+    <?php foreach ($avaliacoes as $avaliacao): ?>
+      <div class="border rounded p-3 mb-3">
+        <div class="d-flex justify-content-between">
+          <strong><?= htmlspecialchars($avaliacao['nome']) ?></strong>
+          <div class="text-warning">
+            <?= str_repeat("★", $avaliacao['nota']) . str_repeat("☆", 5 - $avaliacao['nota']) ?>
+          </div>
+        </div>
+        <p class="mb-0"><?= nl2br(htmlspecialchars($avaliacao['comentario'])) ?></p>
+        <small class="text-muted"><?= date("d/m/Y H:i", strtotime($avaliacao['data_hora'])) ?></small>
       </div>
-      <p class="mb-0">Produto chegou rápido e é exatamente como na foto.</p>
-    </div>
+    <?php endforeach; ?>
+  <?php else: ?>
+    <p class="text-muted">Nenhuma avaliação ainda. Seja o primeiro!</p>
+  <?php endif; ?>
+</div>
+
+
+
+  
+<!-- Formulário para nova avaliação -->
+<h5>Deixe sua avaliação</h5>
+<form method="POST" action="enviar_avaliacao.php">
+  <input type="hidden" name="produto_id" value="<?= $produto['id'] ?>">
+  <input type="hidden" name="usuario_id" value="<?= $_SESSION['usuario_id'] ?>">
+  
+  <div class="mb-3">
+    <label for="comentario" class="form-label">Comentário</label>
+    <textarea class="form-control" id="comentario" name="comentario" rows="3" required></textarea>
   </div>
 
-  <!-- Formulário para nova avaliação -->
-  <h5>Deixe sua avaliação</h5>
-  <form method="POST" action="enviar_avaliacao.php">
-    <input type="hidden" name="produto_id" value="<?= $produto['id'] ?>">
-    <div class="mb-3">
-      <label for="nome" class="form-label">Seu nome</label>
-      <input type="text" class="form-control" id="nome" name="nome" required>
-    </div>
+  <div class="mb-3">
+    <label class="form-label">Nota</label>
+    <select class="form-select" name="nota" required>
+      <option value="">Selecione...</option>
+      <option value="5">★★★★★ - Excelente</option>
+      <option value="4">★★★★☆ - Muito bom</option>
+      <option value="3">★★★☆☆ - Bom</option>
+      <option value="2">★★☆☆☆ - Regular</option>
+      <option value="1">★☆☆☆☆ - Ruim</option>
+    </select>
+  </div>
 
-    <div class="mb-3">
-      <label for="comentario" class="form-label">Comentário</label>
-      <textarea class="form-control" id="comentario" name="comentario" rows="3" required></textarea>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Nota</label>
-      <select class="form-select" name="nota" required>
-        <option value="">Selecione...</option>
-        <option value="5">★★★★★ - Excelente</option>
-        <option value="4">★★★★☆ - Muito bom</option>
-        <option value="3">★★★☆☆ - Bom</option>
-        <option value="2">★★☆☆☆ - Regular</option>
-        <option value="1">★☆☆☆☆ - Ruim</option>
-      </select>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
-  </form>
-</div>
+  <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
+</form>
+  </div>
 
 <!-- Produtos relacionados -->
 <div class="container mb-5">
   <h3 class="mb-4">Produtos Relacionados</h3>
   <div class="row">
-    <div class="col-md-3">
-      <div class="card h-100 card-wrapper">
-        <div class="favorite-checkbox">
-          <input type="checkbox" id="fav1">
-          <label for="fav1"><i class="fas fa-heart"></i></label>
+    <?php if ($relacionados): ?>
+      <?php foreach ($relacionados as $rel): ?>
+        <div class="col-md-3">
+          <div class="card h-100 card-wrapper">
+            <div class="favorite-checkbox">
+              <input type="checkbox" id="fav<?= $rel['id'] ?>">
+              <label for="fav<?= $rel['id'] ?>"><i class="fas fa-heart"></i></label>
+            </div>
+            <img src="../IMG/uploads/<?= htmlspecialchars($rel['imagem']) ?>" class="card-img-top" alt="<?= htmlspecialchars($rel['nome']) ?>">
+            <div class="card-body">
+              <h5 class="card-title"><?= htmlspecialchars($rel['nome']) ?></h5>
+              <p class="text-primary fw-bold">R$ <?= number_format($rel['preco'], 2, ',', '.') ?></p>
+              <a href="r1.php?id=<?= $rel['id'] ?>" class="btn btn-outline-primary btn-sm">Ver Produto</a>
+            </div>
+          </div>
         </div>
-        <img src="../IMG/roupas/r3.webp" class="card-img-top" alt="Produto 1">
-        <div class="card-body">
-          <h5 class="card-title">Camiseta Básica</h5>
-          <p class="text-primary fw-bold">R$ 69,90</p>
-          <a href="#" class="btn btn-outline-primary btn-sm">Ver Produto</a>
-        </div>
-      </div>
-    </div>
-    
-    <div class="col-md-3">
-      <div class="card h-100 card-wrapper">
-        <div class="favorite-checkbox">
-          <input type="checkbox" id="fav2">
-          <label for="fav2"><i class="fas fa-heart"></i></label>
-        </div>
-        <img src="../IMG/roupas/r2.webp" class="card-img-top" alt="Produto 2">
-        <div class="card-body">
-          <h5 class="card-title">Moletom Liso</h5>
-          <p class="text-primary fw-bold">R$ 149,90</p>
-          <a href="#" class="btn btn-outline-primary btn-sm">Ver Produto</a>
-        </div>
-      </div>
-    </div>
-    
-    <div class="col-md-3">
-      <div class="card h-100 card-wrapper">
-        <div class="favorite-checkbox">
-          <input type="checkbox" id="fav3">
-          <label for="fav3"><i class="fas fa-heart"></i></label>
-        </div>
-        <img src="../IMG/roupas/r8.webp" class="card-img-top" alt="Produto 3">
-        <div class="card-body">
-          <h5 class="card-title">Calça Jeans Slim</h5>
-          <p class="text-primary fw-bold">R$ 139,90</p>
-          <a href="#" class="btn btn-outline-primary btn-sm">Ver Produto</a>
-        </div>
-      </div>
-    </div>
-    
-    <div class="col-md-3">
-      <div class="card h-100 card-wrapper">
-        <div class="favorite-checkbox">
-          <input type="checkbox" id="fav4">
-          <label for="fav4"><i class="fas fa-heart"></i></label>
-        </div>
-        <img src="../IMG/roupas/r5.webp" class="card-img-top" alt="Produto 4">
-        <div class="card-body">
-          <h5 class="card-title">Jaqueta Jeans</h5>
-          <p class="text-primary fw-bold">R$ 199,90</p>
-          <a href="#" class="btn btn-outline-primary btn-sm">Ver Produto</a>
-        </div>
-      </div>
-    </div>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <p class="text-muted">Nenhum produto relacionado encontrado.</p>
+    <?php endif; ?>
   </div>
 </div>
+
 
 <!-- Rodapé -->
 <footer class="bg-dark text-white text-center py-4">

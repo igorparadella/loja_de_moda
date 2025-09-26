@@ -17,7 +17,7 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $produtosDestaque = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ----------- ROUPAS FEMININAS (categoria_id = 1) -----------
+// ----------- ROUPAS FEMININAS (categoria_id = 2) -----------
 $sql = "SELECT p.id, p.nome, p.preco, p.imagem, c.nome AS categoria
         FROM Produto p
         INNER JOIN Categoria c ON p.categoria_id = c.id
@@ -28,7 +28,7 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $produtosFemininos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ----------- ROUPAS MASCULINAS (categoria_id = 2) -----------
+// ----------- ROUPAS MASCULINAS (categoria_id = 1) -----------
 $sql = "SELECT p.id, p.nome, p.preco, p.imagem, c.nome AS categoria
         FROM Produto p
         INNER JOIN Categoria c ON p.categoria_id = c.id

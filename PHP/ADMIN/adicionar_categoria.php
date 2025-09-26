@@ -77,7 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <a href="categorias.php">📁 Categorias</a>
     <a href="usuarios.php">👥 Usuários</a>
     <a href="pedidos.php">📦 Pedidos</a>
-    <a href="configuracoes.php">⚙️ Configurações</a>
     <a href="logout.php"><i class="bi bi-box-arrow-right"></i> Sair</a>
 </div>
 

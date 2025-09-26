@@ -6,7 +6,11 @@ if (!isset($_SESSION['admin_id'])) {
 }
 require_once 'db.php';
 
-// Consulta pedidos com informações do usuário
+// Filtros vindos do formulário
+$status = $_GET['status'] ?? '';
+$pagamento = $_GET['pagamento'] ?? '';
+
+// Query base
 $sql = "
     SELECT 
         p.id AS pedido_id,
@@ -18,11 +22,26 @@ $sql = "
         p.enderecoEntrega
     FROM Pedido p
     JOIN Usuario u ON p.idUsuario = u.id
-    ORDER BY p.data DESC
+    WHERE 1=1
 ";
 
+// Aplicar filtros dinamicamente
+$params = [];
+
+if ($status !== '') {
+    $sql .= " AND p.status = :status";
+    $params['status'] = $status;
+}
+
+if ($pagamento !== '') {
+    $sql .= " AND p.formaPagamento = :pagamento";
+    $params['pagamento'] = $pagamento;
+}
+
+$sql .= " ORDER BY p.data DESC";
+
 $stmt = $pdo->prepare($sql);
-$stmt->execute();
+$stmt->execute($params);
 $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Função para buscar os produtos de um pedido
@@ -38,6 +57,7 @@ function getProdutosPedido($pdo, $pedido_id) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -86,7 +106,6 @@ function getProdutosPedido($pdo, $pedido_id) {
     <a href="categorias.php">📁 Categorias</a>
     <a href="usuarios.php">👥 Usuários</a>
     <a href="pedidos.php">📦 Pedidos</a>
-    <a href="configuracoes.php">⚙️ Configurações</a>
     <a href="logout.php"><i class="bi bi-box-arrow-right"></i> Sair</a>
 </div>
 
@@ -94,6 +113,39 @@ function getProdutosPedido($pdo, $pedido_id) {
 <div class="main">
     <h2>Pedidos</h2>
     <p class="text-muted">Lista de pedidos realizados</p>
+
+    <form method="GET" class="d-flex gap-3 mb-4 flex-wrap">
+    <div style="flex: 1 1 200px;">
+        <label for="status" class="form-label mb-1">Status do Pedido</label>
+        <select name="status" id="status" class="form-select form-select-sm">
+            <option value="">Todos</option>
+            <option value="Em processamento" <?= $status === 'Em processamento' ? 'selected' : '' ?>>Em processamento</option>
+            <option value="A Caminho" <?= $status === 'A Caminho' ? 'selected' : '' ?>>A Caminho</option>
+            <option value="Entregue" <?= $status === 'Entregue' ? 'selected' : '' ?>>Entregue</option>
+            <option value="Cancelado" <?= $status === 'Cancelado' ? 'selected' : '' ?>>Cancelado</option>
+        </select>
+    </div>
+
+    <div style="flex: 1 1 200px;">
+        <label for="pagamento" class="form-label mb-1">Forma de Pagamento</label>
+        <select name="pagamento" id="pagamento" class="form-select form-select-sm">
+            <option value="">Todas</option>
+            <option value="Cartão de Crédito" <?= $pagamento === 'Cartão de Crédito' ? 'selected' : '' ?>>Cartão de Crédito</option>
+            <option value="Boleto" <?= $pagamento === 'Boleto' ? 'selected' : '' ?>>Boleto</option>
+            <option value="Pix" <?= $pagamento === 'Pix' ? 'selected' : '' ?>>Pix</option>
+        </select>
+    </div>
+
+    <div style="flex: 0 0 120px; align-self: flex-end;">
+        <button type="submit" class="btn btn-primary w-100 btn-sm">Filtrar</button>
+    </div>
+    
+    <div style="flex: 0 0 120px; align-self: flex-end;">
+        <a href="pedidos.php" class="btn btn-secondary w-100 btn-sm">Limpar Filtros</a>
+    </div>
+</form>
+
+
 
     <?php if ($pedidos): ?>
         <?php foreach ($pedidos as $pedido): ?>

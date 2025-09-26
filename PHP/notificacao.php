@@ -17,6 +17,9 @@ $messages = [
     ],'log_f' => [
         'text' => '🚫 Acesso negado. Tente novamente!',
         'class' => 'alert-danger'
+    ],'requisicao_invalida' => [
+        'text' => '🚫 Requisicao invalida. Tente novamente!',
+        'class' => 'alert-danger'
     ],
 
     // ---------------------sucesso-------------------------
@@ -36,7 +39,10 @@ $messages = [
   ],'msg_ev_s' => [
     'text' => '✅ Sua mensagem foi enviada com sucesso!',
     'class' => 'alert-success' 
-]
+  ],'pedido_cancelado' => [
+    'text' => '✅ Se pedido foi cancelado!',
+    'class' => 'alert-success' 
+  ]
 ];
 
 

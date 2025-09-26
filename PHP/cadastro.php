@@ -133,9 +133,33 @@ require 'notificacao.php';
           <input type="email" class="form-control" name="email" required>
         </div>
         <div class="mb-3">
-          <label class="form-label">Senha</label>
-          <input type="password" class="form-control" name="senha" required>
-        </div>
+  <label for="senha" class="form-label">Senha</label>
+  <div class="input-group">
+    <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha" required>
+    <button type="button" class="btn btn-outline-secondary" id="toggleSenha">
+      <i class="bi bi-eye"></i>
+    </button>
+  </div>
+</div>
+
+<script>
+  const senhaInput = document.getElementById('senha');
+  const toggleSenhaBtn = document.getElementById('toggleSenha');
+  const toggleIcon = toggleSenhaBtn.querySelector('i');
+
+  toggleSenhaBtn.addEventListener('click', () => {
+    if (senhaInput.type === 'password') {
+      senhaInput.type = 'text';
+      toggleIcon.classList.remove('bi-eye');
+      toggleIcon.classList.add('bi-eye-slash');
+    } else {
+      senhaInput.type = 'password';
+      toggleIcon.classList.remove('bi-eye-slash');
+      toggleIcon.classList.add('bi-eye');
+    }
+  });
+</script>
+
       </div>
 
       <!-- Etapa 2 -->

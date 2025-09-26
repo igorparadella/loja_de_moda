@@ -76,7 +76,6 @@ $totalCategorias = $pdo->query("SELECT COUNT(*) FROM Categoria")->fetchColumn();
     <a href="categorias.php">📁 Categorias</a>
     <a href="usuarios.php">👥 Usuários</a>
     <a href="pedidos.php">📦 Pedidos</a>
-    <a href="configuracoes.php">⚙️ Configurações</a>
     <a href="logout.php"><i class="bi bi-box-arrow-right"></i> Sair</a>
 </div>
 
@@ -128,7 +127,7 @@ $totalCategorias = $pdo->query("SELECT COUNT(*) FROM Categoria")->fetchColumn();
             <div class="col-md-4 col-lg-3 mb-4">
                 <div class="card h-100">
                     <?php if (!empty($produto['imagem'])): ?>
-                        <img src="<?php echo htmlspecialchars($produto['imagem']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($produto['nome']); ?>">
+                        <img src="../../IMG/uploads/<?php echo htmlspecialchars($produto['imagem']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($produto['nome']); ?>">
                     <?php else: ?>
                         <img src="https://via.placeholder.com/300x200?text=Sem+Imagem" class="card-img-top" alt="Sem imagem">
                     <?php endif; ?>

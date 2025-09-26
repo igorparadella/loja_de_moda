@@ -6,14 +6,37 @@ if (!isset($_SESSION['admin_id'])) {
 }
 require_once 'db.php';
 
-// Consulta todos os produtos com categoria
+// Captura os filtros
+$filtro_nome = $_GET['nome'] ?? '';
+$filtro_categoria = $_GET['categoria'] ?? '';
+
+// Monta a SQL com filtros
 $sql = "SELECT p.id, p.nome, p.preco, p.imagem, c.nome AS categoria
         FROM Produto p
         INNER JOIN Categoria c ON p.categoria_id = c.id
-        ORDER BY p.id DESC";
+        WHERE 1=1";
+
+$params = [];
+
+if ($filtro_nome !== '') {
+    $sql .= " AND p.nome LIKE :nome";
+    $params['nome'] = '%' . $filtro_nome . '%';
+}
+
+if ($filtro_categoria !== '') {
+    $sql .= " AND c.id = :categoria";
+    $params['categoria'] = $filtro_categoria;
+}
+
+$sql .= " ORDER BY p.id DESC";
+
 $stmt = $pdo->prepare($sql);
-$stmt->execute();
+$stmt->execute($params);
 $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Pega categorias para o select
+$stmt = $pdo->query("SELECT id, nome FROM Categoria ORDER BY nome ASC");
+$categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -65,7 +88,6 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <a href="categorias.php">📁 Categorias</a>
     <a href="usuarios.php">👥 Usuários</a>
     <a href="pedidos.php">📦 Pedidos</a>
-    <a href="configuracoes.php">⚙️ Configurações</a>
     <a href="logout.php"><i class="bi bi-box-arrow-right"></i> Sair</a>
 </div>
 
@@ -73,6 +95,36 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="main">
     <h2>Todos os Produtos</h2>
     <p class="text-muted">Gerencie seus produtos cadastrados</p>
+
+    <form method="GET" class="d-flex gap-2 mb-4 flex-wrap align-items-end">
+    <div style="flex: 1 1 200px;">
+        <input 
+            type="text" 
+            name="nome" 
+            class="form-control form-control-sm" 
+            placeholder="Buscar por nome..." 
+            value="<?= htmlspecialchars($filtro_nome) ?>"
+        >
+    </div>
+
+    <div style="flex: 1 1 200px;">
+        <select name="categoria" class="form-select form-select-sm">
+            <option value="">Todas as Categorias</option>
+            <?php foreach ($categorias as $cat): ?>
+                <option value="<?= $cat['id'] ?>" <?= $filtro_categoria == $cat['id'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($cat['nome']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+
+    <div style="flex: 0 0 auto;" class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
+        <a href="<?= strtok($_SERVER["REQUEST_URI"], '?') ?>" class="btn btn-outline-secondary btn-sm">Limpar filtro</a>
+    </div>
+</form>
+
+
 
     <div class="mb-3">
         <a href="adicionar_produto.php" class="btn btn-primary">➕ Adicionar Novo Produto</a>
@@ -84,7 +136,7 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="col-md-4 col-lg-3 mb-4">
                     <div class="card h-100">
                         <?php if (!empty($produto['imagem'])): ?>
-                            <img src="<?php echo htmlspecialchars($produto['imagem']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($produto['nome']); ?>">
+                            <img src="../../IMG/uploads/<?php echo htmlspecialchars($produto['imagem']); ?>" class="card-img-top h-20" alt="<?php echo htmlspecialchars($produto['nome']); ?>">
                         <?php else: ?>
                             <img src="https://via.placeholder.com/300x200?text=Sem+Imagem" class="card-img-top" alt="Sem imagem">
                         <?php endif; ?>
