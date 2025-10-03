@@ -1,11 +1,34 @@
 <?php
 session_start();
-require 'ADMIN/db.php';  // Ajuste para seu arquivo de conexão PDO
+require 'ADMIN/db.php';
+
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: login.php?msg=login_obrigatorio");
+    exit();
+}
 
 $usuario_id = $_SESSION['usuario_id'];
 
-// Busca dados do usuário no banco
-$stmt = $pdo->prepare('SELECT nome, email, genero, telefone, endereco FROM Usuario WHERE id = ?');
+// Verifica se veio o pedido_id
+if (!isset($_POST['pedido_id'])) {
+    header("Location: pedidos.php?msg=requisicao_invalida");
+    exit();
+}
+
+$pedido_id = $_POST['pedido_id'];
+
+// Busca os dados do pedido
+$stmt = $pdo->prepare("SELECT id, total, status FROM Pedido WHERE id = ? AND idUsuario = ?");
+$stmt->execute([$pedido_id, $usuario_id]);
+$pedido = $stmt->fetch();
+
+if (!$pedido || $pedido['status'] !== 'Em processamento') {
+    header("Location: pedidos.php?msg=pedido_nao_encontrado_ou_invalido");
+    exit();
+}
+
+// Busca dados do usuário
+$stmt = $pdo->prepare('SELECT nome, email FROM Usuario WHERE id = ?');
 $stmt->execute([$usuario_id]);
 $usuario = $stmt->fetch();
 
@@ -98,52 +121,40 @@ require 'notificacao.php';
 ?>
   <main class="flex-grow-1 bg-light py-5 mt-5">
     <div class="container">
-      <h2 class="text-center mb-4">Entre em Contato</h2>
+      <h2 class="text-center mb-4">Cancelar o pedido</h2>
       <div class="row justify-content-center">
         <div class="col-md-8">
           <div class="card shadow p-4">
-            <form action="contato.php" method="GET">
-            <input type="hidden" name="msg" value="msg_ev_s">
-              <div class="mb-3">
-                <label for="nome" class="form-label">Nome</label>
-                <input type="text" class="form-control" id="nome" placeholder="Digite seu nome" value="<?= htmlspecialchars($usuario['nome']) ?>" required>
-              </div>
-              <div class="mb-3">
-                <label for="email" class="form-label">E-mail</label>
-                <input type="email" class="form-control" id="email" placeholder="Digite seu e-mail" value="<?= htmlspecialchars($usuario['email']) ?>" required>
-              </div>
-              <div class="mb-3">
-                <label for="assunto" class="form-label">Assunto</label>
-                <input type="text" class="form-control" id="assunto" placeholder="Assunto da mensagem" required>
-              </div>
-              <div class="mb-3">
-                <label for="mensagem" class="form-label">Mensagem</label>
-                <textarea class="form-control" id="mensagem" rows="5" placeholder="Escreva sua mensagem" required></textarea>
-              </div>
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary">
-                  <i class="bi bi-envelope-fill me-1"></i> Enviar Mensagem
-                </button>
-              </div>
-            </form>
+          <form action="cancelar_pedido.php" method="POST">
+  <input type="hidden" name="pedido_id" value="<?= $pedido['id'] ?>">
+  <input type="hidden" name="valor" value="<?= htmlspecialchars($pedido['total']) ?>">
+
+  <div class="mb-3">
+    <label class="form-label">Valor do pedido</label>
+    <input type="text" class="form-control" value="R$ <?= number_format($pedido['total'], 2, ',', '.') ?>" disabled>
+  </div>
+
+  <div class="mb-3">
+    <label for="email" class="form-label">E-mail</label>
+    <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($usuario['email']) ?>" disabled>
+  </div>
+
+  <div class="mb-3">
+    <label for="motivo" class="form-label">Motivo do cancelamento</label>
+    <textarea type="text" class="form-control" id="motivo" name="motivo" placeholder="Por que deseja cancelar?" required></textarea>
+  </div>
+
+  <div class="d-grid">
+    <button type="submit" class="btn btn-danger">
+      <i class="bi bi-x-circle me-1"></i> Confirmar Cancelamento
+    </button>
+  </div>
+</form>
+
           </div>
         </div>
       </div>
 
-      <div class="row mt-5 text-center">
-        <div class="col-md-4 mb-3">
-          <i class="bi bi-telephone-fill fs-2 text-primary"></i>
-          <p class="mt-2">Telefone: (11) 1234-5678</p>
-        </div>
-        <div class="col-md-4 mb-3">
-          <i class="bi bi-envelope-at-fill fs-2 text-primary"></i>
-          <p class="mt-2">E-mail: modatop@gmail.com</p>
-        </div>
-        <div class="col-md-4 mb-3">
-          <i class="bi bi-geo-alt-fill fs-2 text-primary"></i>
-          <p class="mt-2">Endereço: Rua Exemplo, 123 - São Paulo/SP</p>
-        </div>
-      </div>
     </div>
   </main>
 

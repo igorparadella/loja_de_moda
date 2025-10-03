@@ -118,6 +118,9 @@ $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <link href="../CSS/index.css" rel="stylesheet" />
   <link href="../CSS/logo.css" rel="stylesheet" />
+
+</style>
+
 </head>
 <body class="d-flex flex-column min-vh-100">
   <main class="flex-grow-1">
@@ -194,114 +197,98 @@ $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
         searchForm.classList.toggle('d-none');
       });
     </script>
+<!-- Filtro lateral (visível apenas em telas md para cima) -->
+<div class="d-none d-md-block position-fixed top-0 start-0 mt-5 ms-1" style="z-index: 1030; width: 280px;">
+  <br /><br />
+  <div class="card shadow p-4">
+    <h5 class="card-title">Filtrar Produtos</h5>
 
-    <!-- Filtro lateral -->
-    <div class="position-fixed top-0 start-0 mt-5 ms-1" style="z-index: 1030; max-width: 320px;">
-      <br /><br />
-      <div class="card shadow p-4">
-        <h5 class="card-title">Filtrar Produtos</h5>
+    <?php
+      $precoAtual = isset($_GET['preco']) && is_numeric($_GET['preco']) ? (float) $_GET['preco'] : 0;
+    ?>
 
-        <?php
-          // Garantir que preco seja numérico para evitar erro no number_format
-          $precoAtual = isset($_GET['preco']) && is_numeric($_GET['preco']) ? (float) $_GET['preco'] : 0;
-        ?>
-
-        <form method="GET" action="">
-          <!-- Nome -->
-          <div class="mb-3">
-            <label for="nome" class="form-label">Nome</label>
-            <input
-              type="text"
-              id="nome"
-              name="nome"
-              class="form-control"
-              value="<?= htmlspecialchars($_GET['nome'] ?? '') ?>"
-              placeholder="Ex: Camiseta, Vestido..."
-            />
-          </div>
-
-          <!-- Categoria -->
-          <div class="mb-3">
-            <label class="form-label">Categoria</label>
-            <select id="categoria" name="categoria" class="form-select">
-              <option value="">Selecione</option>
-              <?php foreach ($categorias as $cat): ?>
-                <option value="<?= $cat['id']; ?>" <?= (($_GET['categoria'] ?? '') == $cat['id']) ? 'selected' : '' ?>>
-                  <?= htmlspecialchars($cat['nome']); ?>
-                </option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-
-          <!-- Preço Máx. -->
-          <div class="mb-3">
-            <label for="preco" class="form-label">Preço Máx.</label>
-            <input
-              type="number"
-              id="preco"
-              name="preco"
-              min="0"
-              max="1000"
-              step="1"
-              class="form-control"
-              placeholder="Ex: 150"
-              value="<?= $precoAtual ?>"
-            />
-          </div>
-
-          <!-- Slider -->
-          <div class="mb-3">
-            <label for="preco_range" class="form-label">Ajuste o preço com o slider</label>
-            <input
-              type="range"
-              id="preco_range"
-              class="w-100"
-              min="0"
-              max="1000"
-              step="1"
-              value="<?= $precoAtual ?>"
-              oninput="updatePreco(this.value)"
-            /><br />
-            <span id="range_value">R$ <?= number_format($precoAtual, 2, ',', '.') ?></span>
-          </div>
-
-          <!-- Botões -->
-          <div class="d-flex justify-content-between">
-            <button type="reset" class="btn btn-secondary">Limpar</button>
-            <button type="submit" class="btn btn-primary">Aplicar</button>
-          </div>
-        </form>
+    <form method="GET" action="">
+      <!-- Nome -->
+      <div class="mb-3">
+        <label for="nome" class="form-label">Nome</label>
+        <input type="text" id="nome" name="nome" class="form-control"
+               value="<?= htmlspecialchars($_GET['nome'] ?? '') ?>"
+               placeholder="Ex: Camiseta, Vestido...">
       </div>
-    </div>
 
-    <!-- Script para sincronizar os campos do filtro -->
-    <script>
-      const precoInput = document.getElementById('preco');
-      const precoRange = document.getElementById('preco_range');
-      const rangeValue = document.getElementById('range_value');
+      <!-- Categoria -->
+      <div class="mb-3">
+        <label class="form-label">Categoria</label>
+        <select id="categoria" name="categoria" class="form-select">
+          <option value="">Selecione</option>
+          <?php foreach ($categorias as $cat): ?>
+            <option value="<?= $cat['id']; ?>" <?= (($_GET['categoria'] ?? '') == $cat['id']) ? 'selected' : '' ?>>
+              <?= htmlspecialchars($cat['nome']); ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+      </div>
 
-      function formatarReal(valor) {
-        return parseFloat(valor).toLocaleString('pt-BR', {
-          style: 'currency',
-          currency: 'BRL',
-        });
-      }
+      <!-- Preço -->
+      <div class="mb-3">
+        <label for="preco" class="form-label">Preço Máx.</label>
+        <input type="number" id="preco" name="preco" min="0" max="1000" step="1"
+               class="form-control" placeholder="Ex: 150"
+               value="<?= $precoAtual ?>">
+      </div>
 
-      function updatePreco(valor) {
-        precoInput.value = valor;
-        rangeValue.textContent = formatarReal(valor);
-      }
+      <!-- Slider -->
+      <div class="mb-3">
+        <label for="preco_range" class="form-label">Ajuste o preço com o slider</label>
+        <input type="range" id="preco_range" class="w-100" min="0" max="1000" step="1"
+               value="<?= $precoAtual ?>" oninput="updatePreco(this.value)">
+        <br>
+        <span id="range_value">R$ <?= number_format($precoAtual, 2, ',', '.') ?></span>
+      </div>
 
-      precoInput.addEventListener('input', () => {
-        precoRange.value = precoInput.value;
-        rangeValue.textContent = formatarReal(precoInput.value);
-      });
-    </script>
+      <!-- Botões -->
+      <div class="d-flex justify-content-between">
+        <button type="reset" class="btn btn-secondary">Limpar</button>
+        <button type="submit" class="btn btn-primary">Aplicar</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-    <!-- Produtos -->
-    <section class="py-5 h-100">
-      <br />
-      <div class="container" style="margin-left: 320px;">
+<!-- Script do Filtro -->
+<script>
+  const precoInput = document.getElementById('preco');
+  const precoRange = document.getElementById('preco_range');
+  const rangeValue = document.getElementById('range_value');
+
+  function formatarReal(valor) {
+    return parseFloat(valor).toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+  }
+
+  function updatePreco(valor) {
+    precoInput.value = valor;
+    rangeValue.textContent = formatarReal(valor);
+  }
+
+  precoInput.addEventListener('input', () => {
+    precoRange.value = precoInput.value;
+    rangeValue.textContent = formatarReal(precoInput.value);
+  });
+</script>
+
+<!-- Produtos -->
+<section class="py-5 h-100">
+  <div class="container-fluid px-3">
+    <div class="row">
+      
+      <!-- Espaço reservado para o filtro (ocupa espaço apenas em telas md+) -->
+      <div class="d-none d-md-block col-md-2 "></div>
+
+      <!-- Coluna de produtos -->
+      <div class="col-12 col-md-9"><br>
         <h2 class="text-center mb-4">Destaques da Loja</h2>
         <div class="row g-3">
           <?php if (count($produtos) > 0): ?>
@@ -312,23 +299,16 @@ $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <input type="checkbox" id="fav<?= $produto['id'] ?>" />
                     <label for="fav<?= $produto['id'] ?>"><i class="fas fa-heart"></i></label>
                   </div>
-
                   <?php if (!empty($produto['imagem'])): ?>
-                    <img
-                      src="../IMG/uploads/<?= htmlspecialchars($produto['imagem']) ?>"
-                      class="card-img-top product-img"
-                      alt="<?= htmlspecialchars($produto['nome']) ?>"
-                    />
+                    <img src="../IMG/uploads/<?= htmlspecialchars($produto['imagem']) ?>"
+                         class="card-img-top product-img"
+                         alt="<?= htmlspecialchars($produto['nome']) ?>">
                   <?php else: ?>
-                    <img
-                      src="https://via.placeholder.com/300x200?text=Sem+Imagem"
-                      class="card-img-top product-img"
-                      alt="Sem imagem"
-                    />
+                    <img src="https://via.placeholder.com/300x200?text=Sem+Imagem"
+                         class="card-img-top product-img" alt="Sem imagem">
                   <?php endif; ?>
-
                   <div class="card-body d-flex flex-column">
-                    <h5 class="card-title"><?= htmlspecialchars($produto['nome']) ?></h5>
+                    <h5 class="card-title limita-texto"><?= htmlspecialchars($produto['nome']) ?></h5>
                     <p class="card-text"><?= htmlspecialchars($produto['categoria']) ?></p>
                     <p class="text-primary fw-bold">
                       R$ <?= number_format($produto['preco'], 2, ',', '.') ?>
@@ -345,15 +325,22 @@ $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <?php endif; ?>
         </div>
 
-        <!-- Botão Ver Mais Produtos (fora do loop!) -->
+        <!-- Ver mais -->
         <?php if (count($produtos) >= $limit): ?>
           <div class="text-center my-4">
             <button id="loadMoreBtn" class="btn btn-primary">Ver mais produtos</button>
           </div>
         <?php endif; ?>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
   </main>
+
+
+  <a href="faq.php" class="btn btn-primary position-fixed bottom-0 end-0 m-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 64px; height: 64px; font-size: 32px;">
+  <i class="bi bi-question-circle"></i>
+</a>
 
   <!-- Rodapé -->
   <footer class="bg-dark text-white text-center py-4 mt-5">

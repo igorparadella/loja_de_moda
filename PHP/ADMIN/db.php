@@ -1,4 +1,11 @@
 <?php
+/*
+display_errors = On
+display_startup_errors = On
+error_reporting = E_ALL
+// */
+
+
 $host = "localhost";
 $user = "root";
 $pass = "root";

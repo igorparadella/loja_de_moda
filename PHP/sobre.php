@@ -134,6 +134,11 @@ require 'notificacao.php';
     </div>
   </main>
 
+  <a href="faq.php" class="btn btn-primary position-fixed bottom-0 end-0 m-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 64px; height: 64px; font-size: 32px;">
+  <i class="bi bi-question-circle"></i>
+</a>
+
+
   <footer class="bg-dark text-white text-center py-4 mt-auto">
     <div class="container">
       <p class="mb-0">&copy; 2025 ModaTop - Todos os direitos reservados.</p>

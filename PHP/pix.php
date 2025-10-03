@@ -73,6 +73,9 @@ elseif ($tp === 'carrinho') {
     exit;
 }
 
+
+
+
 $frete = 15.00;
 $total_com_frete = $total + $frete;
 

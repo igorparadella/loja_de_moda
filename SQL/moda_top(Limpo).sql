@@ -235,6 +235,20 @@ CREATE TABLE `usuario` (
   `endereco` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+
+
+CREATE TABLE `cancelamento` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `pedido_id` bigint UNSIGNED NOT NULL,
+  `usuario_id` bigint UNSIGNED NOT NULL,
+  `motivo` TEXT NOT NULL,
+  `email` VARCHAR(255),
+  `data_cancelamento` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`pedido_id`) REFERENCES `pedido`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`usuario_id`) REFERENCES `usuario`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 --
 -- Índices para tabelas despejadas
 --

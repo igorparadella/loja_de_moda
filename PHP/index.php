@@ -1,8 +1,4 @@
 <?php
-// Ativa os erros para debug
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 // Conexão com o banco
 require 'ADMIN/db.php';
@@ -21,7 +17,7 @@ $produtosDestaque = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $sql = "SELECT p.id, p.nome, p.preco, p.imagem, c.nome AS categoria
         FROM Produto p
         INNER JOIN Categoria c ON p.categoria_id = c.id
-        WHERE c.id = 2
+        WHERE c.id = 9
         ORDER BY p.id DESC
         LIMIT 3";
 $stmt = $pdo->prepare($sql);
@@ -32,7 +28,7 @@ $produtosFemininos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $sql = "SELECT p.id, p.nome, p.preco, p.imagem, c.nome AS categoria
         FROM Produto p
         INNER JOIN Categoria c ON p.categoria_id = c.id
-        WHERE c.id = 1
+        WHERE c.id = 10
         ORDER BY p.id DESC
         LIMIT 3";
 $stmt = $pdo->prepare($sql);
@@ -156,103 +152,115 @@ require 'notificacao.php';
   
 <!-- Produtos -->
 <section class="py-5 h-100"><br>
-<div class="container" style="margin-left: 320px;">
-  <h2 class="text-center mb-4">Destaques da Loja</h2>
-  <div class="row g-3">
-    <?php if (count($produtosDestaque) > 0): ?>
-      <?php foreach ($produtosDestaque as $produto): ?>
-        <div class="col-12 col-sm-6 col-md-4 mb-4">
-          <div class="card h-100">
-            <div class="favorite-checkbox">
-              <input type="checkbox" id="fav<?= $produto['id'] ?>">
-              <label for="fav<?= $produto['id'] ?>"><i class="fas fa-heart"></i></label>
-            </div>
-            <?php if (!empty($produto['imagem'])): ?>
-              <img src="../IMG/uploads/<?= htmlspecialchars($produto['imagem']) ?>" class="card-img-top product-img" alt="<?= htmlspecialchars($produto['nome']) ?>">
-            <?php else: ?>
-              <img src="https://via.placeholder.com/300x200?text=Sem+Imagem" class="card-img-top product-img" alt="Sem imagem">
-            <?php endif; ?>
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title"><?= htmlspecialchars($produto['nome']) ?></h5>
-              <p class="card-text"><?= htmlspecialchars($produto['categoria']) ?></p>
-              <p class="text-primary fw-bold">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
-              <div class="mt-auto">
-                <a href="r1.php?id=<?= $produto['id'] ?>" class="btn btn-outline-primary w-100">Comprar</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <p class="text-center">Nenhum produto encontrado.</p>
-    <?php endif; ?>
-  </div>
-</div>
-<div class="container" style="margin-left: 320px;">
-  <h2 class="text-center mb-4">Roupas Femininas</h2>
-  <div class="row g-3">
-    <?php if (count($produtosFemininos) > 0): ?>
-      <?php foreach ($produtosFemininos as $produto): ?>
-        <div class="col-12 col-sm-6 col-md-4 mb-4">
-          <div class="card h-100">
-            <div class="favorite-checkbox">
-              <input type="checkbox" id="fav<?= $produto['id'] ?>">
-              <label for="fav<?= $produto['id'] ?>"><i class="fas fa-heart"></i></label>
-            </div>
-            <?php if (!empty($produto['imagem'])): ?>
-              <img src="../IMG/uploads/<?= htmlspecialchars($produto['imagem']) ?>" class="card-img-top product-img" alt="<?= htmlspecialchars($produto['nome']) ?>">
-            <?php else: ?>
-              <img src="https://via.placeholder.com/300x200?text=Sem+Imagem" class="card-img-top product-img" alt="Sem imagem">
-            <?php endif; ?>
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title"><?= htmlspecialchars($produto['nome']) ?></h5>
-              <p class="card-text"><?= htmlspecialchars($produto['categoria']) ?></p>
-              <p class="text-primary fw-bold">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
-              <div class="mt-auto">
-                <a href="r1.php?id=<?= $produto['id'] ?>" class="btn btn-outline-primary w-100">Comprar</a>
-              </div>
-            </div>
-          </div>
-        </div>      <?php endforeach; ?>
-    <?php else: ?>
-      <p class="text-center">Nenhum produto encontrado.</p>
-    <?php endif; ?>
-  </div>
-</div>
 
-<div class="container" style="margin-left: 320px;">
-  <h2 class="text-center mb-4">Roupas Masculinas</h2>
-  <div class="row g-3">
-    <?php if (count($produtosMasculinos) > 0): ?>
-      <?php foreach ($produtosMasculinos as $produto): ?>
-        <div class="col-12 col-sm-6 col-md-4 mb-4">
-          <div class="card h-100">
-            <div class="favorite-checkbox">
-              <input type="checkbox" id="fav<?= $produto['id'] ?>">
-              <label for="fav<?= $produto['id'] ?>"><i class="fas fa-heart"></i></label>
-            </div>
-            <?php if (!empty($produto['imagem'])): ?>
-              <img src="../IMG/uploads/<?= htmlspecialchars($produto['imagem']) ?>" class="card-img-top product-img" alt="<?= htmlspecialchars($produto['nome']) ?>">
-            <?php else: ?>
-              <img src="https://via.placeholder.com/300x200?text=Sem+Imagem" class="card-img-top product-img" alt="Sem imagem">
-            <?php endif; ?>
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title"><?= htmlspecialchars($produto['nome']) ?></h5>
-              <p class="card-text"><?= htmlspecialchars($produto['categoria']) ?></p>
-              <p class="text-primary fw-bold">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
-              <div class="mt-auto">
-                <a href="r1.php?id=<?= $produto['id'] ?>" class="btn btn-outline-primary w-100">Comprar</a>
+  <!-- Destaques -->
+  <div class="container px-3 px-md-5">
+    <h2 class="text-center mb-4">Destaques da Loja</h2>
+    <div class="row g-3">
+      <?php if (count($produtosDestaque) > 0): ?>
+        <?php foreach ($produtosDestaque as $produto): ?>
+          <div class="col-12 col-sm-6 col-md-4 mb-4">
+            <div class="card h-100">
+              <div class="favorite-checkbox">
+                <input type="checkbox" id="fav<?= $produto['id'] ?>">
+                <label for="fav<?= $produto['id'] ?>"><i class="fas fa-heart"></i></label>
+              </div>
+              <?php if (!empty($produto['imagem'])): ?>
+                <img src="../IMG/uploads/<?= htmlspecialchars($produto['imagem']) ?>" class="card-img-top product-img" alt="<?= htmlspecialchars($produto['nome']) ?>">
+              <?php else: ?>
+                <img src="https://via.placeholder.com/300x200?text=Sem+Imagem" class="card-img-top product-img" alt="Sem imagem">
+              <?php endif; ?>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title"><?= htmlspecialchars($produto['nome']) ?></h5>
+                <p class="card-text"><?= htmlspecialchars($produto['categoria']) ?></p>
+                <p class="text-primary fw-bold">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+                <div class="mt-auto">
+                  <a href="r1.php?id=<?= $produto['id'] ?>" class="btn btn-outline-primary w-100">Comprar</a>
+                </div>
               </div>
             </div>
           </div>
-        </div>            <?php endforeach; ?>
-    <?php else: ?>
-      <p class="text-center">Nenhum produto encontrado.</p>
-    <?php endif; ?>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <p class="text-center">Nenhum produto encontrado.</p>
+      <?php endif; ?>
+    </div>
   </div>
-</div>
+
+  <!-- Roupas Femininas -->
+  <div class="container px-3 px-md-5">
+    <h2 class="text-center mb-4">Roupas Femininas</h2>
+    <div class="row g-3">
+      <?php if (count($produtosFemininos) > 0): ?>
+        <?php foreach ($produtosFemininos as $produto): ?>
+          <div class="col-12 col-sm-6 col-md-4 mb-4">
+            <div class="card h-100">
+              <div class="favorite-checkbox">
+                <input type="checkbox" id="fav<?= $produto['id'] ?>">
+                <label for="fav<?= $produto['id'] ?>"><i class="fas fa-heart"></i></label>
+              </div>
+              <?php if (!empty($produto['imagem'])): ?>
+                <img src="../IMG/uploads/<?= htmlspecialchars($produto['imagem']) ?>" class="card-img-top product-img" alt="<?= htmlspecialchars($produto['nome']) ?>">
+              <?php else: ?>
+                <img src="https://via.placeholder.com/300x200?text=Sem+Imagem" class="card-img-top product-img" alt="Sem imagem">
+              <?php endif; ?>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title"><?= htmlspecialchars($produto['nome']) ?></h5>
+                <p class="card-text"><?= htmlspecialchars($produto['categoria']) ?></p>
+                <p class="text-primary fw-bold">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+                <div class="mt-auto">
+                  <a href="r1.php?id=<?= $produto['id'] ?>" class="btn btn-outline-primary w-100">Comprar</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <p class="text-center">Nenhum produto encontrado.</p>
+      <?php endif; ?>
+    </div>
+  </div>
+
+  <!-- Roupas Masculinas -->
+  <div class="container px-3 px-md-5">
+    <h2 class="text-center mb-4">Roupas Masculinas</h2>
+    <div class="row g-3">
+      <?php if (count($produtosMasculinos) > 0): ?>
+        <?php foreach ($produtosMasculinos as $produto): ?>
+          <div class="col-12 col-sm-6 col-md-4 mb-4">
+            <div class="card h-100">
+              <div class="favorite-checkbox">
+                <input type="checkbox" id="fav<?= $produto['id'] ?>">
+                <label for="fav<?= $produto['id'] ?>"><i class="fas fa-heart"></i></label>
+              </div>
+              <?php if (!empty($produto['imagem'])): ?>
+                <img src="../IMG/uploads/<?= htmlspecialchars($produto['imagem']) ?>" class="card-img-top product-img" alt="<?= htmlspecialchars($produto['nome']) ?>">
+              <?php else: ?>
+                <img src="https://via.placeholder.com/300x200?text=Sem+Imagem" class="card-img-top product-img" alt="Sem imagem">
+              <?php endif; ?>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title"><?= htmlspecialchars($produto['nome']) ?></h5>
+                <p class="card-text"><?= htmlspecialchars($produto['categoria']) ?></p>
+                <p class="text-primary fw-bold">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+                <div class="mt-auto">
+                  <a href="r1.php?id=<?= $produto['id'] ?>" class="btn btn-outline-primary w-100">Comprar</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <p class="text-center">Nenhum produto encontrado.</p>
+      <?php endif; ?>
+    </div>
+  </div>
 
 </section>
+
+<a href="faq.php" class="btn btn-primary position-fixed bottom-0 end-0 m-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 64px; height: 64px; font-size: 32px;">
+  <i class="bi bi-question-circle"></i>
+</a>
+
 
 
   <!-- Rodapé -->
@@ -263,6 +271,8 @@ require 'notificacao.php';
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  
 </body>
 </html>
 

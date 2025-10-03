@@ -44,9 +44,6 @@ if ($carrinho) {
   <link href="../CSS/logo.css" rel="stylesheet">
 </head>
 <body>
-
-
-
     <!-- Navbar -->
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
@@ -208,6 +205,12 @@ document.querySelectorAll('.quantidade-input').forEach(input => {
 });
 
 </script>
+
+<a href="faq.php"
+   class="btn btn-primary position-fixed bottom-0 end-0 m-3 d-flex align-items-center justify-content-center rounded-circle"
+   style="width: 64px; height: 64px; font-size: 32px; z-index: 1055;"> <!-- Aumentei o z-index -->
+  <i class="bi bi-question-circle"></i>
+</a>
 
 
 <footer class="bg-dark fixed-bottom text-white text-center py-4 mt-auto">

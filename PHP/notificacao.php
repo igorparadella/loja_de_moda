@@ -20,7 +20,10 @@ $messages = [
     ],'requisicao_invalida' => [
         'text' => '🚫 Requisicao invalida. Tente novamente!',
         'class' => 'alert-danger'
-    ],
+    ],'user_n_f' => [
+      'text' => '🚫 Usuário não encontrado. Tente novamente!',
+      'class' => 'alert-danger'
+  ],
 
     // ---------------------sucesso-------------------------
 
@@ -40,7 +43,7 @@ $messages = [
     'text' => '✅ Sua mensagem foi enviada com sucesso!',
     'class' => 'alert-success' 
   ],'pedido_cancelado' => [
-    'text' => '✅ Se pedido foi cancelado!',
+    'text' => '✅ Seu pedido foi cancelado!',
     'class' => 'alert-success' 
   ]
 ];

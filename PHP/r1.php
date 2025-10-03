@@ -197,8 +197,7 @@ require 'notificacao.php';
     </div>
 
     <div class="col-md-6">
-      <h1 class="mb-3"><?= htmlspecialchars($produto['nome']) ?></h1>
-      <p class="text-muted">Ref: <?= $produto['id'] ?></p>
+      <h1 class="mb-3 limita-texto"><?= htmlspecialchars($produto['nome']) ?></h1>
       <p class="fs-4 fw-bold text-primary">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
       <p><?= nl2br(htmlspecialchars($produto['descricao'])) ?></p>
 
@@ -327,7 +326,7 @@ $avaliacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <img src="../IMG/uploads/<?= htmlspecialchars($rel['imagem']) ?>" class="card-img-top" alt="<?= htmlspecialchars($rel['nome']) ?>">
             <div class="card-body">
-              <h5 class="card-title"><?= htmlspecialchars($rel['nome']) ?></h5>
+              <h5 class="card-title limita-texto"><?= htmlspecialchars($rel['nome']) ?></h5>
               <p class="text-primary fw-bold">R$ <?= number_format($rel['preco'], 2, ',', '.') ?></p>
               <a href="r1.php?id=<?= $rel['id'] ?>" class="btn btn-outline-primary btn-sm">Ver Produto</a>
             </div>

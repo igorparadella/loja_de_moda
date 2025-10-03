@@ -160,3 +160,10 @@ background-position: center;
     width: auto;
     animation: slideDownFade 0.5s ease forwards; /* duração e easing da animação */
   }
+
+  .limita-texto {
+    white-space: nowrap;     /* Impede a quebra de linha */
+    overflow: hidden;        /* Oculta o texto que exceda o limite */
+    text-overflow: ellipsis; /* Adiciona reticências (...) ao final do texto */
+    max-width: 100%;        /* Define a largura máxima (ajuste conforme necessário) */
+  }

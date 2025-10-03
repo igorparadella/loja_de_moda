@@ -1,23 +1,16 @@
-<?php
-session_start();
-?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ModaTop - Loja de Roupas</title>
+  <title>FAQ - ModaTop</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="../CSS/index.css" rel="stylesheet">
-
   <link href="../CSS/logo.css" rel="stylesheet">
-
- 
-
-<body class="d-flex flex-column min-vh-100">
-
+</head>
+<body>
 
 
     <!-- Navbar -->
@@ -54,7 +47,7 @@ session_start();
     
           <!-- Links do menu -->
           <ul class="navbar-nav ms-3">
-            <li class="nav-item"><a class="nav-link " href="index.php">Início</a></li>
+            <li class="nav-item"><a class="nav-link active" href="index.php">Início</a></li>
                           <li class="nav-item"><a class="nav-link " href="produtos.php">Produtos</a></li>
               <li class="nav-item"><a class="nav-link" href="carrinho.php">Carrinho</a></li>
             <li class="nav-item"><a class="nav-link" href="sobre.php">Sobre</a></li>
@@ -90,74 +83,74 @@ session_start();
 <?php
 require 'notificacao.php';
 ?>
+    
 
+    <!-- Conteúdo FAQ -->
+    <main class="container my-5" style="margin-top: 100px;"><br><br>
+      <h1 class="text-center mb-4">Dúvidas Frequentes</h1>
 
-
- 
-
-          
-  <!-- Login -->
-  <main class="flex-grow-1 d-flex align-items-center justify-content-center bg-light">
-    <div class="login-card mt-5 mb-5">
-      <h2 class="text-center">Login</h2>
-      <form action="log.php" method="post">
-        <div class="mb-3">
-          <label for="email" class="form-label">E-mail</label>
-          <input type="email" class="form-control" id="email" name="email" placeholder="seu-email@exemplo.com" required>
+      <div class="accordion" id="faqAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+              Como faço para comprar um produto?
+            </button>
+          </h2>
+          <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Basta navegar até a página da loja, escolher o produto e clicar em <strong>“Adicionar ao carrinho”</strong>.
+            </div>
+          </div>
         </div>
-        <div class="mb-3">
-  <label for="senha" class="form-label">Senha</label>
-  <div class="input-group">
-    <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha" required>
-    <button type="button" class="btn btn-outline-secondary" id="toggleSenha">
-      <i class="bi bi-eye"></i>
-    </button>
-  </div>
-</div>
 
-<script>
-  const senhaInput = document.getElementById('senha');
-  const toggleSenhaBtn = document.getElementById('toggleSenha');
-  const toggleIcon = toggleSenhaBtn.querySelector('i');
-
-  toggleSenhaBtn.addEventListener('click', () => {
-    if (senhaInput.type === 'password') {
-      senhaInput.type = 'text';
-      toggleIcon.classList.remove('bi-eye');
-      toggleIcon.classList.add('bi-eye-slash');
-    } else {
-      senhaInput.type = 'password';
-      toggleIcon.classList.remove('bi-eye-slash');
-      toggleIcon.classList.add('bi-eye');
-    }
-  });
-</script>
-
-        <div class="d-grid">
-          <button type="submit" class="btn btn-primary">Entrar</button>
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+              Quais formas de pagamento são aceitas?
+            </button>
+          </h2>
+          <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Aceitamos cartão de crédito, débito e PIX.
+            </div>
+          </div>
         </div>
-        <div class="mt-3 text-center">
-          <a href="cadastro.php">Não tem uma conta? Cadastre-se</a>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+              Posso trocar ou devolver um produto?
+            </button>
+          </h2>
+          <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Sim, você pode solicitar a troca ou devolução em até <strong>7 dias</strong> após o recebimento.
+            </div>
+          </div>
         </div>
-      </form>
-    </div>
-  </main>
 
-  <a href="faq.php" class="btn btn-primary position-fixed bottom-0 end-0 m-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 64px; height: 64px; font-size: 32px;">
-  <i class="bi bi-question-circle"></i>
-</a>
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+              Como acompanho meu pedido?
+            </button>
+          </h2>
+          <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Após a compra, você poderá acompanhar o status do pedido na área de <strong>“Meus Pedidos”</strong>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
 
-  <!-- Rodapé -->
-  <footer class="bg-dark text-white text-center py-4 mt-auto">
-    <div class="container">
-      <p class="mb-0">&copy; 2025 ModaTop - Todos os direitos reservados.</p>
-    </div>
-  </footer>
+    <!-- Rodapé (mesmo do index) -->
+    <footer class="bg-dark text-white fixed-bottom text-center py-4">
+      <div class="container">
+        <p class="mb-1">&copy; 2025 ModaTop - Todos os direitos reservados.</p>
+      </div>
+    </footer>
 
-  <!-- Scripts -->
-
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

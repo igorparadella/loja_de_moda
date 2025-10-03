@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="mb-3">
             <label class="form-label">Descrição</label>
-            <textarea name="descricao" class="form-control"></textarea>
+            <textarea name="descricao" class="form-control" required></textarea>
         </div>
 
         <div class="mb-3">
@@ -156,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="mb-3">
     <label class="form-label">Imagem (Upload)</label>
-    <input type="file" name="imagem" class="form-control" accept=".jpg,.jpeg,.png,.gif">
+    <input type="file" name="imagem" class="form-control" accept=".jpg,.jpeg,.png,.gif" required>
 </div>
 
 
@@ -176,8 +176,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" name="certificacao" id="certificacao">
-            <label class="form-check-label" for="certificacao">
+            <input class="form-check-input" type="checkbox" name="certificacao" id="certificacao" checked>
+            <label class="form-check-label" for="certificacao" >
                 Possui certificação de segurança
             </label>
         </div>

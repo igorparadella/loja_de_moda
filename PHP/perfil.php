@@ -15,8 +15,8 @@ $stmt->execute([$usuario_id]);
 $usuario = $stmt->fetch();
 
 if (!$usuario) {
-    echo "Usuário não encontrado.";
-    exit;
+    header("Location: login.php?msg=login_obrigatorio");
+    exit();
 }
 
 // Busca os pedidos do usuário
@@ -242,7 +242,6 @@ require 'notificacao.php';
 </div>
 
 
-        <!-- Aba: Endereço -->
         <div class="tab-pane fade" id="endereco" role="tabpanel">
           <h5>Endereço de Entrega</h5>
           <p><?= nl2br(htmlspecialchars($usuario['endereco'] ?? 'Não informado')) ?></p>
@@ -255,7 +254,10 @@ require 'notificacao.php';
   </main>
 
 
-  <!-- Rodapé -->
+  <a href="faq.php" class="btn btn-primary position-fixed bottom-0 end-0 m-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 64px; height: 64px; font-size: 32px;">
+  <i class="bi bi-question-circle"></i>
+</a>
+
   <footer class="bg-dark text-white text-center py-4">
     <div class="container">
       <p class="mb-1">&copy; 2025 ModaTop - Todos os direitos reservados.</p>

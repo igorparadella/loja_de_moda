@@ -84,9 +84,8 @@ $stmt->execute([$usuario_id]);
 $usuario = $stmt->fetch();
 
 if (!$usuario) {
-    // Usuário não encontrado (algo errado)
-    echo "Usuário não encontrado.";
-    exit;
+  header("Location: login.php?msg=login_obrigatorio");
+  exit();
 }
 
 $endereco = $usuario['endereco'];

@@ -14,7 +14,7 @@ require_once 'db.php';
 $sql = "SELECT p.id, p.nome, p.preco, p.imagem, c.nome AS categoria
         FROM Produto p
         INNER JOIN Categoria c ON p.categoria_id = c.id
-        ORDER BY p.id DESC LIMIT 6";
+        ORDER BY p.id DESC LIMIT 8";
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -127,8 +127,8 @@ $totalCategorias = $pdo->query("SELECT COUNT(*) FROM Categoria")->fetchColumn();
             <div class="col-md-4 col-lg-3 mb-4">
                 <div class="card h-100">
                     <?php if (!empty($produto['imagem'])): ?>
-                        <img src="../../IMG/uploads/<?php echo htmlspecialchars($produto['imagem']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($produto['nome']); ?>">
-                    <?php else: ?>
+                        <img src="../../IMG/uploads/<?php echo htmlspecialchars($produto['imagem']); ?>" class="card-img-top h-20" alt="<?php echo htmlspecialchars($produto['nome']); ?>">
+                        <?php else: ?>
                         <img src="https://via.placeholder.com/300x200?text=Sem+Imagem" class="card-img-top" alt="Sem imagem">
                     <?php endif; ?>
                     <div class="card-body">

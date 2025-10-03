@@ -171,12 +171,14 @@ require 'notificacao.php';
                 <p><strong>Endereço de Entrega:</strong> <?= nl2br(htmlspecialchars($pedido['enderecoEntrega'] ?? 'Não informado')) ?></p>
 
                 <?php if ($pedido['status'] === 'Em processamento'): ?>
-                  <form method="POST" action="cancelar_pedido.php" onsubmit="return confirm('Tem certeza que deseja cancelar este pedido?');">
+                  <form method="POST" action="can_pd.php">
                     <input type="hidden" name="pedido_id" value="<?= $pedido['id'] ?>">
-                    <button type="submit" class="btn btn-sm border border-danger text-danger bg-transparent">                      Cancelar Pedido
+                    <button type="submit" class="btn btn-sm border border-danger text-danger bg-transparent">
+                      Cancelar Pedido
                     </button>
                   </form>
                 <?php endif; ?>
+
 
               </div>
             </div>
